@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Data Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .modal-fullscreen-md-down {
+            max-width: 98vw;
+        }
+        .modal-fullscreen-md-down .modal-dialog {
+            max-width: 98vw;
+            margin: auto;
+        }
+        .table td {
+            position: relative;
+        }
+        .table td .form-control {
+            width: auto;
+            display:block;
+            margin:0;
+            height: 100%;
+        }
+        .table tr.editing{
+           background-color: #e0f7fa;
+        }
+        .table tr.editing td{
+           outline: 1px solid #81d4fa;
+        }
+        .table tr.editing .display-value {
+            display: none;
+        }
+        .table td .display-value {
+          display: inline-block;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display:none;
+        }
+        .loading-spinner {
+           border: 5px solid #f3f3f3;
+           border-top: 5px solid #3498db;
+           border-radius: 50%;
+           width: 50px;
+           height: 50px;
+           animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+           0% { transform: rotate(0deg); }
+           100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product Editor</h1>
+        <div id="productGrid" class="mb-5">
+            <h2>Products</h2>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div></div>
+                <button class="btn btn-primary" onclick="prepareNewProductModal()"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Category</th><th>Department</th><th>Brand</th><th>Shop</th><th>Title</th>
+                            <th>Slug</th><th>Description</th><th>Logo</th><th>Banner</th><th>Active</th>
+                            <th>Available</th><th>Discontinued</th><th>Limited</th><th>Availability</th><th>Bitset</th>
+                            <th>Created At</th><th>Updated At</th><th>Rating Stars</th><th>Rating Users</th>
+                            <th>Price Min</th><th>Price Max</th><th>List Price Min</th><th>List Price Max</th>
+                            <th>UOM</th><th>Content</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="productAttribGrid">
+            <h2>Product Attributes</h2>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div></div>
+              <button class="btn btn-primary"  onclick="prepareNewProductAttribModal()"><i class="fas fa-plus"></i> Add Attribute</button>
+          </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Product ID</th><th>Attribute ID</th><th>Is Variant</th><th>Notes</th><th>Bitset</th>
+                            <th>Created At</th><th>Updated At</th><th>Obsolete Group ID</th><th>Value</th><th>UOM</th><th>Key Feature</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productAttribTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+         <!-- Product Modal -->
+           <div class="modal fade modal-fullscreen-md-down" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productModalLabel">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="productForm">
+                                <input type="hidden" id="product_id_field" name="product_id">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Category</label>
+                                        <input type="number" class="form-control" id="category_id_field" name="category_id">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Department</label>
+                                        <input type="number" class="form-control" id="department_id_field" name="department_id">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <label class="form-label">Brand</label>
+                                      <input type="number" class="form-control" id="brand_id_field" name="brand_id">
+                                  </div>
+                                  <div class="col-md-6">
+                                      <label class="form-label">Shop</label>
+                                      <input type="number" class="form-control" id="shop_id_field" name="shop_id">
+                                  </div>
+                              </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="title_field" name="title">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Slug</label>
+                                    <input type="text" class="form-control" id="slug_field" name="slug">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="description_field" name="description"></textarea>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <label class="form-label">Logo Image</label>
+                                      <input type="text" class="form-control" id="logo_image_field" name="logo_image">
+                                  </div>
+                                  <div class="col-md-6">
+                                      <label class="form-label">Banner Image</label>
+                                      <input type="text" class="form-control" id="banner_image_field" name="banner_image">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-4">
+                                      <label class="form-check-label">Is Active</label>
+                                      <input class="form-check-input" type="checkbox" id="is_active_field" name="is_active">
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label class="form-check-label">Is Available</label>
+                                      <input class="form-check-input" type="checkbox" id="is_available_field" name="is_available" value="true">
+                                  </div>
+                                  <div class="col-md-4">
+                                      <label class="form-check-label">Is Discontinued</label>
+                                      <input class="form-check-input" type="checkbox" id="is_discontinued_field" name="is_discontinued">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                    <label class="form-check-label">Is Limited</label>
+                                    <input class="form-check-input" type="checkbox" id="is_limited_field" name="is_limited">
+                                  </div>
+                                  <div class="col-md-6">
+                                      <label class="form-label">Availability ID</label>
+                                      <input type="number" class="form-control" id="availability_id_field" name="availability_id">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <label class="form-label">Bitset</label>
+                                      <input type="number" class="form-control" id="bitset_field" name="bitset">
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label class="form-label">Rating Stars</label>
+                                    <input type="number" class="form-control" id="rating_stars_field" name="rating_stars">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <label class="form-label">Rating Users</label>
+                                      <input type="number" class="form-control" id="rating_users_field" name="rating_users">
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label class="form-label">Price Min</label>
+                                    <input type="number" class="form-control" id="price_min_field" name="price_min">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                      <label class="form-label">Price Max</label>
+                                      <input type="number" class="form-control" id="price_max_field" name="price_max">
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label class="form-label">List Price Min</label>
+                                    <input type="number" class="form-control" id="list_price_min_field" name="list_price_min">
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <div class="col-md-6">
+                                    <label class="form-label">List Price Max</label>
+                                    <input type="number" class="form-control" id="list_price_max_field" name="list_price_max">
+                                  </div>
+                                  <div class="col-md-6">
+                                    <label class="form-label">UOM</label>
+                                    <input type="number" class="form-control" id="uom_id_field" name="uom_id">
+                                  </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Content</label>
+                                    <textarea class="form-control" id="content_field" name="content"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="saveProduct()">Save</button>
+                        </div>
+                    </div>
+                </div>
+           </div>
+
+
+           <!-- Product Attribute Modal -->
+           <div class="modal fade modal-fullscreen-md-down" id="productAttribModal" tabindex="-1" aria-labelledby="productAttribModalLabel" aria-hidden="true">
+               <div class="modal-dialog">
+                   <div class="modal-content">
+                       <div class="modal-header">
+                           <h5 class="modal-title" id="productAttribModalLabel">Edit Product Attribute</h5>
+                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                       </div>
+                       <div class="modal-body">
+                           <form id="productAttribForm">
+                               <input type="hidden" id="product_attrib_value_id_field" name="product_attrib_value_id">
+                               <div class="row mb-3">
+                                   <div class="col-md-6">
+                                        <label class="form-label">Product ID</label>
+                                        <input type="number" class="form-control" id="product_id_field_attrib" name="product_id">
+                                   </div>
+                                   <div class="col-md-6">
+                                       <label class="form-label">Attribute ID</label>
+                                       <input type="number" class="form-control" id="attrib_id_field" name="attrib_id">
+                                   </div>
+                               </div>
+                               <div class="row mb-3">
+                                   <div class="col-md-6">
+                                       <label class="form-check-label">Is Variant</label>
+                                       <input class="form-check-input" type="checkbox" id="is_variant_field" name="is_variant">
+                                   </div>
+                                   <div class="col-md-6">
+                                       <label class="form-label">Notes</label>
+                                       <input type="text" class="form-control" id="notes_field" name="notes">
+                                   </div>
+                               </div>
+                               <div class="row mb-3">
+                                   <div class="col-md-6">
+                                       <label class="form-label">Bitset</label>
+                                       <input type="number" class="form-control" id="bitset_field_attrib" name="bitset">
+                                   </div>
+                                   <div class="col-md-6">
+                                       <label class="form-label">Obsolete Group ID</label>
+                                       <input type="number" class="form-control" id="attrib_group_id__obsolete_field" name="attrib_group_id__obsolete">
+                                   </div>
+                               </div>
+                               <div class="row mb-3">
+                                   <div class="col-md-6">
+                                       <label class="form-label">Value</label>
+                                       <input type="text" class="form-control" id="value_field" name="value">
+                                   </div>
+                                   <div class="col-md-6">
+                                       <label class="form-label">UOM</label>
+                                       <input type="number" class="form-control" id="uom_id_field_attrib" name="uom_id">
+                                   </div>
+                               </div>
+                               <div class="mb-3">
+                                   <label class="form-check-label">Is Key Feature</label>
+                                   <input class="form-check-input" type="checkbox" id="is_key_feature_field" name="is_key_feature">
+                               </div>
+                           </form>
+                       </div>
+                       <div class="modal-footer">
+                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                           <button type="button" class="btn btn-primary" onclick="saveProductAttrib()">Save</button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+       let products = [];
+        let productAttributes = [];
+        let currentEditingRow = null;
+
+        const productTableBody = document.getElementById('productTableBody');
+        const productModal = document.getElementById('productModal');
+        const productForm = document.getElementById('productForm');
+        const productAttribTableBody = document.getElementById('productAttribTableBody');
+        const productAttribModal = document.getElementById('productAttribModal');
+        const productAttribForm = document.getElementById('productAttribForm');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        function renderProducts() {
+            productTableBody.innerHTML = "";
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td data-column="product_id">${product.product_id}</td>
+                    <td data-column="category_id"><span class="display-value">${product.category_id}</span></td>
+                    <td data-column="department_id"><span class="display-value">${product.department_id}</span></td>
+                    <td data-column="brand_id"><span class="display-value">${product.brand_id}</span></td>
+                    <td data-column="shop_id"><span class="display-value">${product.shop_id}</span></td>
+                    <td data-column="title"><span class="display-value">${product.title}</span></td>
+                    <td data-column="slug"><span class="display-value">${product.slug}</span></td>
+                    <td data-column="description"><span class="display-value">${product.description}</span></td>
+                    <td data-column="logo_image"><span class="display-value">${product.logo_image}</span></td>
+                    <td data-column="banner_image"><span class="display-value">${product.banner_image}</span></td>
+                    <td data-column="is_active"><span class="display-value">${product.is_active ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                    <td data-column="is_available"><span class="display-value">${product.is_available ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                    <td data-column="is_discontinued"><span class="display-value">${product.is_discontinued ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                     <td data-column="is_limited"><span class="display-value">${product.is_limited ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                    <td data-column="availability_id"><span class="display-value">${product.availability_id}</span></td>
+                    <td data-column="bitset"><span class="display-value">${product.bitset}</span></td>
+                    <td>${new Date(product.created_at).toLocaleString()}</td>
+                    <td>${new Date(product.updated_at).toLocaleString()}</td>
+                    <td data-column="rating_stars"><span class="display-value">${product.rating_stars}</span></td>
+                    <td data-column="rating_users"><span class="display-value">${product.rating_users}</span></td>
+                    <td data-column="price_min"><span class="display-value">${product.price_min}</span></td>
+                    <td data-column="price_max"><span class="display-value">${product.price_max}</span></td>
+                    <td data-column="list_price_min"><span class="display-value">${product.list_price_min}</span></td>
+                    <td data-column="list_price_max"><span class="display-value">${product.list_price_max}</span></td>
+                    <td data-column="uom_id"><span class="display-value">${product.uom_id}</span></td>
+                    <td data-column="content"><span class="display-value">${product.content}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="prepareEditProductModal(${product.product_id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.product_id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                productTableBody.appendChild(row);
+            });
+        }
+
+        function renderProductAttributes() {
+            productAttribTableBody.innerHTML = "";
+            productAttributes.forEach(attrib => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td data-column="product_attrib_value_id">${attrib.product_attrib_value_id}</td>
+                    <td data-column="product_id"><span class="display-value">${attrib.product_id}</span></td>
+                    <td data-column="attrib_id"><span class="display-value">${attrib.attrib_id}</span></td>
+                    <td data-column="is_variant"><span class="display-value">${attrib.is_variant ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                    <td data-column="notes"><span class="display-value">${attrib.notes}</span></td>
+                    <td data-column="bitset"><span class="display-value">${attrib.bitset}</span></td>
+                    <td>${new Date(attrib.created_at).toLocaleString()}</td>
+                    <td>${new Date(attrib.updated_at).toLocaleString()}</td>
+                    <td data-column="attrib_group_id__obsolete"><span class="display-value">${attrib.attrib_group_id__obsolete}</span></td>
+                    <td data-column="value"><span class="display-value">${attrib.value}</span></td>
+                    <td data-column="uom_id"><span class="display-value">${attrib.uom_id}</span></td>
+                   <td data-column="is_key_feature"><span class="display-value">${attrib.is_key_feature ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="prepareEditProductAttribModal(${attrib.product_attrib_value_id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProductAttrib(${attrib.product_attrib_value_id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                 `;
+                productAttribTableBody.appendChild(row);
+            });
+        }
+
+         function prepareNewProductModal() {
+            productForm.reset();
+            document.getElementById("product_id_field").value = 0;
+            productModal.querySelector('[data-bs-toggle="modal"]').click();
+        }
+        function prepareNewProductAttribModal(){
+            productAttribForm.reset();
+            document.getElementById("product_attrib_value_id_field").value = 0;
+            productAttribModal.querySelector('[data-bs-toggle="modal"]').click();
+        }
+
+        function prepareEditProductModal(id) {
+            const product = products.find(p => p.product_id === id);
+            if (product) {
+                 document.getElementById("product_id_field").value = product.product_id;
+                    document.getElementById("category_id_field").value = product.category_id || '';
+                    document.getElementById("department_id_field").value = product.department_id || '';
+                    document.getElementById("brand_id_field").value = product.brand_id || '';
+                    document.getElementById("shop_id_field").value = product.shop_id || '';
+                    document.getElementById("title_field").value = product.title || '';
+                    document.getElementById("slug_field").value = product.slug || '';
+                    document.getElementById("description_field").value = product.description || '';
+                    document.getElementById("logo_image_field").value = product.logo_image || '';
+                    document.getElementById("banner_image_field").value = product.banner_image || '';
+                    document.getElementById("is_active_field").checked = product.is_active || false;
+                    document.getElementById("is_available_field").checked = product.is_available || true;
+                    document.getElementById("is_discontinued_field").checked = product.is_discontinued || false;
+                    document.getElementById("is_limited_field").checked = product.is_limited || false;
+                    document.getElementById("availability_id_field").value = product.availability_id || 1;
+                    document.getElementById("bitset_field").value = product.bitset || 0;
+                    document.getElementById("rating_stars_field").value = product.rating_stars || 0;
+                    document.getElementById("rating_users_field").value = product.rating_users || 0;
+                    document.getElementById("price_min_field").value = product.price_min || 0;
+                    document.getElementById("price_max_field").value = product.price_max || 0;
+                    document.getElementById("list_price_min_field").value = product.list_price_min || 0;
+                    document.getElementById("list_price_max_field").value = product.list_price_max || 0;
+                    document.getElementById("uom_id_field").value = product.uom_id || 0;
+                    document.getElementById("content_field").value = product.content || '';
+                    productModal.querySelector('[data-bs-toggle="modal"]').click();
+
+            }
+        }
+
+        function prepareEditProductAttribModal(id) {
+            const attrib = productAttributes.find(p => p.product_attrib_value_id === id);
+            if (attrib) {
+                    document.getElementById("product_attrib_value_id_field").value = attrib.product_attrib_value_id;
+                   document.getElementById("product_id_field_attrib").value = attrib.product_id || '';
+                   document.getElementById("attrib_id_field").value = attrib.attrib_id || '';
+                   document.getElementById("is_variant_field").checked = attrib.is_variant || false;
+                   document.getElementById("notes_field").value = attrib.notes || '';
+                   document.getElementById("bitset_field_attrib").value = attrib.bitset || 0;
+                   document.getElementById("attrib_group_id__obsolete_field").value = attrib.attrib_group_id__obsolete || 0;
+                   document.getElementById("value_field").value = attrib.value || '';
+                   document.getElementById("uom_id_field_attrib").value = attrib.uom_id || 0;
+                   document.getElementById("is_key_feature_field").checked = attrib.is_key_feature || false;
+                 productAttribModal.querySelector('[data-bs-toggle="modal"]').click();
+            }
+        }
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+        function saveProduct() {
+            showLoading();
+            const formData = new FormData(productForm);
+            const productData = {};
+            formData.forEach((value, key) => {
+                if (key === 'is_active' || key === 'is_available' || key === 'is_discontinued' || key === 'is_limited') {
+                    productData[key] = document.getElementById(key + '_field').checked;
+                } else {
+                    productData[key] = value;
+                }
+            });
+            setTimeout(()=>{
+               if(productData.product_id == 0) {
+                productData.product_id = Date.now();
+                productData.created_at = Date.now()
+                productData.updated_at = Date.now();
+                products.push(productData);
+               } else {
+                const index = products.findIndex(p => p.product_id == productData.product_id)
+                if(index != -1){
+                  productData.updated_at = Date.now();
+                  products[index] = productData;
+                }
+              }
+               console.log("product saved", productData);
+               productModal.querySelector('[data-bs-dismiss="modal"]').click();
+                renderProducts();
+              hideLoading();
+            }, 500)
+        }
+
+         function saveProductAttrib() {
+            showLoading();
+             const formData = new FormData(productAttribForm);
+               const attribData = {};
+               formData.forEach((value, key) => {
+                 if (key === 'is_variant' || key === 'is_key_feature') {
+                       attribData[key] = document.getElementById(key + '_field').checked;
+                   } else {
+                       attribData[key] = value;
+                   }
+               });
+           setTimeout(()=>{
+               if(attribData.product_attrib_value_id == 0) {
+                attribData.product_attrib_value_id = Date.now();
+                attribData.created_at = Date.now()
+                attribData.updated_at = Date.now();
+                productAttributes.push(attribData);
+               } else {
+                const index = productAttributes.findIndex(p => p.product_attrib_value_id == attribData.product_attrib_value_id)
+                if(index != -1){
+                  attribData.updated_at = Date.now();
+                  productAttributes[index] = attribData;
+                }
+               }
+               console.log("product attribute saved", attribData);
+               productAttribModal.querySelector('[data-bs-dismiss="modal"]').click();
+               renderProductAttributes();
+               hideLoading();
+             },500);
+        }
+        function deleteProduct(id) {
+            showLoading();
+            if (confirm("Are you sure you want to delete this product?")) {
+                setTimeout(()=>{
+                    products = products.filter(p => p.product_id !== id);
+                    renderProducts();
+                    hideLoading();
+                }, 500)
+            } else{
+              hideLoading();
+            }
+        }
+        function deleteProductAttrib(id) {
+            showLoading();
+            if (confirm("Are you sure you want to delete this product attribute?")) {
+                 setTimeout(()=>{
+                    productAttributes = productAttributes.filter(p => p.product_attrib_value_id !== id);
+                    renderProductAttributes();
+                   hideLoading();
+                },500);
+            }else{
+              hideLoading();
+            }
+        }
+        function setupInPlaceEditing() {
+            productTableBody.addEventListener('click', handleCellClick);
+            productAttribTableBody.addEventListener('click', handleCellClick);
+        }
+        function handleCellClick(event) {
+            const cell = event.target.closest('td');
+            if (!cell) return;
+            const columName = cell.getAttribute('data-column');
+            if(!columName) return;
+            const row = cell.closest('tr');
+            if(row.classList.contains('editing')) return;
+           if(!columName) {
+                return;
+            }
+            if (currentEditingRow) {
+                saveCurrentEditingRow();
+            }
+            startEditing(row, cell, columName);
+        }
+        function startEditing(row, cell, columnName) {
+            currentEditingRow = row;
+            row.classList.add('editing');
+            const displaySpan = cell.querySelector('.display-value');
+            let inputElement;
+            const originalValue = displaySpan.innerHTML;
+            displaySpan.style.display = 'none';
+            switch(columnName) {
+                case 'is_active':
+                case 'is_available':
+                case 'is_discontinued':
+                case 'is_limited':
+                 case 'is_variant':
+                case 'is_key_feature':
+                    inputElement = document.createElement('input');
+                    inputElement.type = 'checkbox';
+                    inputElement.checked = (originalValue.includes("fa-check"));
+                    break;
+                case 'description':
+                case 'content':
+                case 'notes':
+                    inputElement = document.createElement('textarea');
+                    inputElement.rows = 2;
+                    inputElement.value = originalValue;
+                    break;
+                default:
+                    inputElement = document.createElement('input');
+                    inputElement.type = 'text';
+                    inputElement.value = originalValue;
+            }
+            inputElement.classList.add('form-control');
+            cell.appendChild(inputElement);
+            inputElement.focus();
+            inputElement.addEventListener('blur', saveCurrentEditingRow);
+        }
+          function saveCurrentEditingRow(){
+             if (!currentEditingRow) return;
+            const cells = currentEditingRow.querySelectorAll('td[data-column]');
+            let editedRowData;
+            if(currentEditingRow.closest('#productGrid')) {
+                editedRowData = products.find(p=> p.product_id == currentEditingRow.querySelector('[data-column="product_id"]').textContent)
+            } else {
+                editedRowData = productAttributes.find(p=> p.product_attrib_value_id == currentEditingRow.querySelector('[data-column="product_attrib_value_id"]').textContent);
+            }
+            cells.forEach(cell => {
+                const columName = cell.getAttribute('data-column');
+                const inputElement = cell.querySelector('input,textarea');
+                if (inputElement) {
+                     if (columName === 'is_active' || columName === 'is_available' || columName === 'is_discontinued' || columName === 'is_limited' || columName === 'is_variant' || columName === 'is_key_feature') {
+                        editedRowData[columName] = inputElement.checked;
+                    } else {
+                       editedRowData[columName] = inputElement.value;
+                    }
+                    cell.removeChild(inputElement);
+                     const displaySpan = cell.querySelector('.display-value');
+                    displaySpan.style.display = 'inline-block';
+                    if(columName === 'is_active' || columName === 'is_available' || columName === 'is_discontinued'
+                    || columName === 'is_limited' || columName === 'is_variant' || columName === 'is_key_feature' ){
+                        displaySpan.innerHTML = editedRowData[columName]? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>';
+                    } else {
+                        displaySpan.innerHTML = editedRowData[columName];
+                    }
+                }
+            });
+            currentEditingRow.classList.remove('editing');
+            currentEditingRow = null;
+             if(currentEditingRow && currentEditingRow.closest('#productGrid')) {
+               renderProducts();
+             }
+            if(currentEditingRow && currentEditingRow.closest('#productAttribGrid')) {
+               renderProductAttributes();
+             }
+        }
+
+
+        products = [
+            {product_id: 1, category_id: 100, department_id: 200, brand_id: 300, shop_id: 400, title: "Product 1", slug: "product-1", description: "Description 1", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", rating_stars: 4.5, rating_users: 10, price_min: 10.00, price_max: 20.00, list_price_min: 12.00, list_price_max: 22.00, uom_id: 1, content: "content 1"},
+            {product_id: 2, category_id: 101, department_id: 201, brand_id: 301, shop_id: 401, title: "Product 2", slug: "product-2", description: "Description 2", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-02T12:00:00Z", updated_at: "2024-01-03T12:00:00Z", rating_stars: 4.0, rating_users: 100, price_min: 20.00, price_max: 30.00, list_price_min: 25.00, list_price_max: 35.00, uom_id: 1, content: "content 2"},
+            {product_id: 3, category_id: 102, department_id: 202, brand_id: 302, shop_id: 402, title: "Product 3", slug: "product-3", description: "Description 3", logo_image: null, banner_image: null, is_active: false, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-03T12:00:00Z", updated_at: "2024-01-04T12:00:00Z", rating_stars: 5.0, rating_users: 5, price_min: 30.00, price_max: 40.00, list_price_min: 32.00, list_price_max: 42.00, uom_id: 1, content: "content 3"}
+        ];
+        productAttributes = [
+            {product_attrib_value_id: 1, product_id: 1, attrib_id: 1, is_variant: true, notes: null, bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", attrib_group_id__obsolete: 0, value: "value 1", uom_id: 1, is_key_feature: true},
+            {product_attrib_value_id: 2, product_id: 1, attrib_id: 2, is_variant: false, notes: "notes 2", bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", attrib_group_id__obsolete: 0, value: "value 2", uom_id: 2, is_key_feature: false},
+            {product_attrib_value_id: 3, product_id: 2, attrib_id: 1, is_variant: true, notes: "notes 3", bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", attrib_group_id__obsolete: 0, value: "value 3", uom_id: 3, is_key_feature: true},
+        ];
+
+        setupInPlaceEditing();
+        renderProducts();
+        renderProductAttributes();
+    </script>
+</body>
+</html>

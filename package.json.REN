@@ -1,0 +1,17 @@
+{
+  "name": "paykhom-microservices",
+  "version": "1.0.0",
+  "description": "Paykhom Microservice",
+  "main": "src/main.ts",
+  "type": "module",
+  "dependencies": {
+    "amqplib": "^0.10.5",
+    "hono": "^4.6.16"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

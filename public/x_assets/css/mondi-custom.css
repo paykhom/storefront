@@ -1,0 +1,20 @@
+.product-img-card {
+    xwidth: 175px;
+    height: 250px;
+    border: 1px solid #FFF;
+    overflow: hidden;
+    position: relative;
+    xmargin: 10px; / Optional: Add some margin between cards /
+}
+
+.product-img-card img {
+    xwidth: 150%;
+    xheight: auto;
+    width: auto;
+    height: 225px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

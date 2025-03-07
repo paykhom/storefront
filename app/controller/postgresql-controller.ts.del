@@ -1,0 +1,74 @@
+// FILE: postgresql-controller.ts
+
+import { BaseController as Controller } from "./base-controller";
+import { PostgresqlClientService } from "paykhom-fw/service/postgresql-client-service";
+import { SessionService, UserSession } from "paykhom-fw/service/session-service"; // Added for potential future use
+import { Context } from 'hono';
+
+export class PostgresqlController extends Controller {
+  private pgc: PostgresqlClientService;
+  private ss: SessionService<UserSession>; // Optional, included for consistency
+
+  constructor(args: Record<string, any>={}, deps: Record<string, any>={}) {
+    super(args);
+    this.pgc = deps.pgc as PostgresqlClientService; // Proper dependency injection
+    this.ss = deps.sessionService as SessionService<UserSession>; // Optional, for future session use
+  }
+
+  async fn(c: Context): Promise<any> {
+    try {
+      // Extract route parameters
+      const fn = c.req.param('fn');
+
+      // Extract payload from the request body
+      const payload = await c.req.json();
+
+      // Construct the PostgreSQL function name
+      const functionName = `${fn}`;
+
+      // Call the PostgreSQL stored function using the PostgresqlClientService
+      const result = await this.pgc.fx(functionName, payload);
+
+      // Send the response back to the client
+      return c.json(result);
+    } catch (error) {
+      // Narrow down the type of `error` to `Error`
+      if (error instanceof Error) {
+        return c.json({ success: false, error: error.message }, 500);
+      } else {
+        // Handle cases where `error` is not an Error object
+        return c.json({ success: false, error: 'An unknown error occurred' }, 500);
+      }
+    }
+  }
+
+  async fnzc(c: Context): Promise<any> {
+    try {
+      // Extract route parameters
+      const fn = c.req.param('fn');
+
+      // Extract payload from the request body
+      const payload = await c.req.json();
+
+      // Construct the PostgreSQL function name
+      const functionName = `${fn}`;
+
+      // Call the PostgreSQL stored function using the PostgresqlClientService
+      const result = await this.pgc.fxzc(functionName, payload);
+
+      // Send the response back to the client with deflate encoding
+      return c.body(result, 200, {
+        'Content-Encoding': 'deflate',
+        'Content-Type': 'application/octet-stream',
+      });
+    } catch (error) {
+      // Narrow down the type of `error` to `Error`
+      if (error instanceof Error) {
+        return c.json({ success: false, error: error.message }, 500);
+      } else {
+        // Handle cases where `error` is not an Error object
+        return c.json({ success: false, error: 'An unknown error occurred' }, 500);
+      }
+    }
+  }
+}

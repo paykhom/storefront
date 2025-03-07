@@ -1,0 +1,24 @@
+{
+  "name": "platform-paykhom-com-2025-typescript",
+  "module": "src/main.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/clean-css": "^4.2.11",
+    "@types/node": "^22.13.9",
+    "@types/pg": "^8.11.11"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "clean-css": "^5.3.3",
+    "hono": "^4.7.4",
+    "paykhom-fw": "../framework-paykhom-com-2025-typescript",
+    "pg": "^8.13.3",
+    "pg-pool": "^3.7.1",
+    "php-parser": "^3.2.2",
+    "redis": "^4.7.0",
+    "terser": "^5.39.0"
+  }
+}

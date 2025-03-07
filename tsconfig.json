@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "lib": ["ESNext", "dom"],
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "sourceMap": true,
+
+      "allowJs": true, // Allow importing .js files
+      "checkJs": true, // Optional: Enable type-checking for .js files
+      
+    },
+     "include": [       
+      "server", 
+      "global.ts",
+      "main.ts", 
+      "app"    
+    ]
+  }
+
+
+

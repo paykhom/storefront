@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My PWA Framework</title>
+    <link rel="stylesheet" href="/pwas/src/public/styles.css">
+    <style>
+        nav ul {
+          list-style-type: none;
+          padding: 0;
+           margin: 0;
+        }
+
+        nav li {
+          display: inline;
+          margin-right: 20px;
+        }
+        nav a {
+          text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/users">Users</a></li>
+       <li><a href="/users/1">User 1</a></li>
+    </ul>
+  </nav>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/pwas/src/service-worker.js')
+                  .then(function(registration) {
+                  // Registration was successful
+                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              }, function(err) {
+                  // registration failed :(
+                  console.log('ServiceWorker registration failed: ', err);
+              });
+            });
+        }
+    </script>
+    <script type="module" src="/pwas/src/app.js"></script>
+</body>
+</html>

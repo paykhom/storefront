@@ -1,0 +1,15 @@
+
+import { Logger } from "../../core/infrastructure/logging/logger";
+import { RabbitMQService } from "../../core/infrastructure/messaging/rabbitmqService";
+import { Config } from "../config"
+
+export class RabbitMQProvider {
+   private rabbitMQService: RabbitMQService
+     constructor(logger: Logger, config: Config) {
+          this.rabbitMQService = new RabbitMQService(config.get('queueName'), logger);
+       }
+
+     getService(): RabbitMQService {
+       return this.rabbitMQService;
+     }
+}
