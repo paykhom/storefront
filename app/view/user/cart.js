@@ -86,7 +86,7 @@ yield html`
 					          <ul class="list-group xlist-group-flush">
 					             <!-- list group -->
 
-`; foreach(this.checkout["cart"]??[] as $item) { `
+`; foreach(this.checkout["cart"]??[] as $item) { yield html`
                                  
 					             <li class="list-group-item py-3 py-lg-0 px-0 border-top">
 					                <!-- row -->
@@ -147,7 +147,7 @@ yield html`
 				 </div>
 
                        
-`; if (count(this.checkout["cart"]??[]) > 0) { `
+`; if (count(this.checkout["cart"]??[]) > 0) { yield html`
 
 					   <!-- sidebar -->
 					   <div class="col-12 col-lg-4 col-md-5">
@@ -245,7 +245,7 @@ yield html`
 
 <script>
 
-export default class Page extends MarketplaceLayout {
+class Page extends MarketplaceLayout {
 
     constructor(params) {
         super(params);

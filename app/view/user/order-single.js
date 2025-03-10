@@ -1,7 +1,7 @@
 //`;namespace App\Views\User;
   
 //use App\Views\MasterLayout;
-
+import MasterLayout from "../master-layout";
 
 export default class OrderSingle extends MasterLayout {
   
@@ -162,7 +162,9 @@ yield html`
 										<!-- tbody -->
 										<tbody>
 
-                              `; foreach(this.so["sales_order_detail"] as $s) { `
+                              `; for (const s of this.so["sales_order_detail"]) {
+ 
+								yield html`
 										   <tr>
 											  <td>
 												 <a href="#" class="text-inherit">
@@ -171,14 +173,14 @@ yield html`
 														  <!-- <img  loading="lazy" data-src="../assets/images/products/product-img-1.jpg" alt="" class="icon-shape icon-lg"> -->
 													   </div>
 													   <div class="ms-lg-4 mt-2 mt-lg-0">
-														  <h5 class="mb-0 h6">`$s["product_variant_title"] `</h5>
+														  <h5 class="mb-0 h6">${s["product_variant_title"]}</h5>
 													   </div>
 													</div>
 												 </a>
 											  </td>
-											  <td><span class="text-body text-end">`$s["price"] `</span></td>
-											  <td class="text-body text-end">`$s["quantity"] `</td>
-											  <td class="text-body text-end">`$s["subtotal"] `</td>
+											  <td><span class="text-body text-end">${s["price"]}</span></td>
+											  <td class="text-body text-end">${s["quantity"]}</td>
+											  <td class="text-body text-end">${s["subtotal"]}</td>
 										   </tr>
                               `; } `
 
@@ -242,6 +244,7 @@ yield html`
 				   </div>
 				</div>
 	</div>
+	console.log(s);
 `;        
    }
    *script() {
@@ -249,7 +252,7 @@ yield html`
 
 yield html`
       <script>
-export default class Page extends MasterLayout {
+class Page extends MasterLayout {
 
 
    constructor(params) {

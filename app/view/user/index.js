@@ -1,7 +1,7 @@
 //`;namespace App\Views\User;
   
 //use App\Views\MasterLayout;
-
+import MasterLayout from "../master-layout";
 
 export default class Index extends MasterLayout {
   

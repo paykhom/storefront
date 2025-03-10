@@ -7,17 +7,8 @@ export default class Checkout extends MarketplaceLayout {
   
 
    *head() {
-      // return html`
-      //     <title>Paykhom Mondi</title
-      //     <meta name="title" content="Paykhom Mondi" />
-
-      //     <meta name="description" content="Paykhom Mondi" />
-
-      //     <meta name="keywords" content="Paykhom Mondi" />
-
-
-         
-      //     `;
+      yield html`
+     `;
    }
 
    *style() {
@@ -35,6 +26,7 @@ yield html`
    
     
   *content() {
+    // console.log(JSON.stringify(this.checkout));IT WORKS!!
     //dd(session('order'));
 yield html`
 
@@ -86,23 +78,28 @@ yield html`
 					          <ul class="list-group xlist-group-flush">
 					             <!-- list group -->
 
-`; foreach(this.checkout["cart"]??[] as $item) { `
+`; 
+//foreach(this.checkout["cart"]??[] as $item) { 
+// for(const item of this.checkout["cart"]) {
+for (const item of Object.values(this.checkout["cart"] ?? {})) {
+
+    yield html`
                                  
 					             <li class="list-group-item py-3 py-lg-0 px-0 border-top">
 					                <!-- row -->
 					                <div class="row align-items-center">
 					                   <div class="col-3 col-md-2">
-					                      <!-- img --> <img  loading="lazy" data-src="`$item["product_media_path"] `" alt="Ecommerce"
+					                      <!-- img --> <img  loading="lazy" data-src="${item["product_media_path"]}" alt="Ecommerce"
 					 class="img-fluid">
 					                   </div>
 					                   <div class="col-4 col-md-5">
 					                      <!-- title -->
 					                      <a href="#" class="text-inherit">
-					 <h6 class="mb-0">`$item["title"] `</h6>
+					 <h6 class="mb-0">${item["title"]}</h6>
 					                      </a>
 					                      <span><small class="text-muted">.98 / lb</small></span>
 					                      <!-- text -->
-					                      <div class="mt-2 small lh-1">
+					                      <!-- <div class="mt-2 small lh-1">
                                             <a href="#!" class="text-decoration-none text-inherit">
                                                 <span
                                                 class="me-1 align-text-bottom">
@@ -118,7 +115,7 @@ yield html`
                                                 </span>
                                                     <span class="text-muted d-none">Remove</span>
                                             </a>
-                                                </div>
+                                                </div> -->
                                                 </div>
                                             <!-- input group -->
                                             <div class="col-3 col-md-3 col-lg-2">
@@ -131,12 +128,14 @@ yield html`
                                             </div>
                                             <!-- price -->
                                             <div class="col-2 text-lg-end text-start text-md-end col-md-2">
-                                                <span class="fw-bold">`$item["rate"] `</span>
+                                                <span class="fw-bold">${item["rate"]}</span>
                                             </div>
                                         </div>
                                     </li>
 
-`; } `
+`; } 
+
+yield html`
 					</ul>
 					<!-- btn -->
 					  <div class="d-flex justify-content-between mt-4 d-none">
@@ -147,7 +146,9 @@ yield html`
 					   </div>
 
                        
-`; if (count(this.checkout["cart"]??[]) > 0) { `
+`; 
+if (((this.checkout["cart"]).length) > 0) { 
+    yield html`
 
 					   <!-- sidebar -->
 					   <div class="col-12 col-lg-4 col-md-5">
@@ -164,28 +165,28 @@ yield html`
 					           <div class="me-auto">
 					              <div>Item Subtotal</div>
 					           </div>
-					           <span>${this.checkout["total_amount"]??0}</span>
+					           <span>${this.checkout["total_amount"]||0}</span>
 					        </li>
 					        <!-- list group item -->
 					   <li class="list-group-item d-flex justify-content-between align-items-start">
 					      <div class="me-auto">
 					         <div>Service Fee</div>
 					      </div>
-					      <span>${this.checkout["total_delivery_charge"]??0}</span>
+					      <span>${this.checkout["total_delivery_charge"]||0}</span>
 					   </li>
 					   <!-- list group item -->
 					   <li class="list-group-item d-flex justify-content-between align-items-start">
 					      <div class="me-auto">
 					         <div class="fw-bold">Total</div>
 					      </div>
-					      <span class="fw-bold">${this.checkout["total_grand"]??0}</span>
+					      <span class="fw-bold">${this.checkout["total_grand"]||0}</span>
 					   </li>
 					    </ul>
 					 </div>
 					 <div class="d-grid mb-1 mt-4 d-none">
 					    <!-- btn -->
 					    <button class="btn btn-primary btn-lg d-flex justify-content-between align-items-center" type="submit">
-					    Go to Checkout <span class="fw-bold">${this.checkout["cart"]["total_grand"]??0}</span></button>
+					    Go to Checkout <span class="fw-bold">${this.checkout["cart"]["total_grand"]||0}</span></button>
 					 </div>
 					 <!-- text -->
 					 <p><small>By placing your order, you agree to be bound by the Freshcart <a href="#!">Terms of Service</a>
@@ -209,7 +210,8 @@ yield html`
 					 </div>
 					</div>
 
-`; } `
+`; } 
+yield html`
 
 
 					</div>
@@ -625,7 +627,7 @@ yield html`
 
 <script>
 
-export default class Page extends MarketplaceLayout {
+class Page extends MarketplaceLayout {
 
     constructor(params) {
         super(params);

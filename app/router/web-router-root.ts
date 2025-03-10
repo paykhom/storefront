@@ -2,7 +2,7 @@
 
 import { Context, Hono } from "hono";
 import { RootController } from "../controller/root-controller";
-//import { RootController } from "../controller/rooot-controller";
+import { ShoppingController } from "../controller/shopping-controller";
 
 import { Glass } from "paykhom-fw/glass";
 
@@ -58,7 +58,53 @@ export class WebRouterRoot extends Glass {
     this.app.get("/reset-password", async (c) => await this.rootController.onGetResetPassword(c));
     this.app.post("/reset-password", async (c) => await this.rootController.onPostResetPassword(c));
 
-    
+
+
+
+    //PHP//
+
+
+
+// Route::get('/info/company', [Controller::class, 'onGetInfoCompany']);
+this.app.get("/info/company", async (c) => await this.rootController.onGetInfoCompany(c));
+
+// Route::get('/info/career', [Controller::class, 'onGetInfoCareer']);
+this.app.get("/info/career", async (c) => await this.rootController.onGetInfoCareer(c));
+
+// Route::get('/info/about', [Controller::class, 'onGetInfoAbout']);
+this.app.get("/info/about", async (c) => await this.rootController.onGetInfoAbout(c));
+// Route::get('/info/help', [Controller::class, 'onGetInfoHelp']);
+this.app.get("/info/help", async (c) => await this.rootController.onGetInfoHelp(c));
+// Route::get('/info/value', [Controller::class, 'onGetInfoValue']);
+this.app.get("/info/value", async (c) => await this.rootController.onGetInfoValue(c));
+// Route::get('/info/payment', [Controller::class, 'onGetInfoPayment']);
+this.app.get("/info/payment", async (c) => await this.rootController.onGetInfoPayment(c));
+// Route::get('/info/shipping', [Controller::class, 'onGetInfoShipping']);
+this.app.get("/info/shipping", async (c) => await this.rootController.onGetInfoShipping(c));
+// Route::get('/info/return', [Controller::class, 'onGetInfoReturn']);
+this.app.get("/info/return", async (c) => await this.rootController.onGetInfoReturn(c));
+// Route::get('/info/faq', [Controller::class, 'onGetInfoFaq']);
+this.app.get("/info/faq", async (c) => await this.rootController.onGetInfoFaq(c));
+// Route::get('/info/checkout', [Controller::class, 'onGetInfoCheckout']);
+this.app.get("/info/checkout", async (c) => await this.rootController.onGetInfoCheckout(c));
+// Route::get('/info/opportunity', [Controller::class, 'onGetInfoOpportunity']);
+this.app.get("/info/opportunity", async (c) => await this.rootController.onGetInfoOpportunity(c));
+// Route::get('/info/entrepreneur', [Controller::class, 'onGetInfoEntrepreneur']);
+this.app.get("/info/entrepreneur", async (c) => await this.rootController.onGetInfoEntrepreneur(c));
+// Route::get('/info/earning', [Controller::class, 'onGetInfoEarning']);
+this.app.get("/info/earning", async (c) => await this.rootController.onGetInfoEarning(c));
+// Route::get('/info/idea', [Controller::class, 'onGetInfoIdea']);
+this.app.get("/info/idea", async (c) => await this.rootController.onGetInfoIdea(c));
+// Route::get('/info/retailer', [Controller::class, 'onGetInfoRetailer']);
+this.app.get("/info/retailer", async (c) => await this.rootController.onGetInfoRetailer(c));
+// Route::get('/info/gift-card', [Controller::class, 'onGetInfoGiftCard']);
+this.app.get("/info/gift-card", async (c) => await this.rootController.onGetInfoGiftCard(c));
+// Route::get('/info/promo-and-coupon', [Controller::class, 'onGetInfoPromo']);
+this.app.get("/info/promo-and-coupon", async (c) => await this.rootController.onGetInfoPromo(c));
+// Route::get('/info/ad', [Controller::class, 'onGetInfoAd']);
+this.app.get("/info/ad", async (c) => await this.rootController.onGetInfoAd(c));
+// Route::get('/info/contact', [Controller::class, 'onGetInfoContact']);
+this.app.get("/info/contact", async (c) => await this.rootController.onGetInfoContact(c));
 
 
 
@@ -190,6 +236,20 @@ export class WebRouterRoot extends Glass {
   
       return c.json(result);
   });
+
+
+
+  /*
+
+Route::post('/login', [Controller::class, 'onPostLogin'])->name('onPostLogin');
+Route::post('/signup', [Controller::class, 'onPostSignup'])->name('onPostSignup');
+
+
+Route::post('/logout', [Controller::class, 'onPostLogout']);
+Route::post('/forgot-password', [Controller::class, 'onPostForgotPassword']);
+Route::post('/reset-password', [Controller::class, 'onPostResetPassword']);
+
+*/
 
   }
 }

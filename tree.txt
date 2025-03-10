@@ -1,0 +1,40 @@
+.
+├── README.md
+├── app
+│   ├── controller
+│   │   ├── base-controller.ts
+│   ├── model
+│   ├── router
+│   │   ├── web-router-admin-panel.ts
+│   │   ├── web-router-frontend.ts
+│   │   └── web-router.ts
+│   └── view
+│       ├── admin
+│       │   ├── _-stub-editor.js
+│       │   ├── _-stub-paginator.js
+│       │   ├── index.js
+│       ├── admin-layout.js
+│       ├── customer-layout.js
+│       ├── index.js
+│       ├── storefront-layout.js
+│       ├── master-layout.js
+│       ├── storefront
+│       │   ├── index.js
+├── bun-inspect-brk.sh
+├── bun-inspect.sh
+├── bun-run.sh
+├── bun.lockb
+├── cli
+├── server
+│   ├── bootstrap
+│   ├── config
+│   ├── middleware
+│   ├── provider
+│   ├── service
+├── global.ts
+├── llm.http
+├── main.ts
+├── tdd
+├── tree.txt
+└── tsconfig.json
+

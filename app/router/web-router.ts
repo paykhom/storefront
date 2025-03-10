@@ -8,12 +8,14 @@ import { UserController } from "../controller/user-controller";
 import { AdminController } from "../controller/admin-controller";
 import { SaasController } from "../controller/saas-controller";
 import { RootController } from "../controller/root-controller";
+import { ShoppingController } from "../controller/shopping-controller";
 
 import { UserSession, SessionService } from "paykhom-fw/service/session-service";
 import { Glass } from "paykhom-fw/glass";
 
+//import { WebRouterShopping } from "./web-router-shopping";
 import { WebRouterRoot } from "./web-router-root";
-import { WebRouterPlatform } from "./web-router-platform";
+import { WebRouterShopping } from "./web-router-shopping";
 import { WebRouterUser } from "./web-router-user";
 import { WebRouterSaas } from "./web-router-saas";
 import { WebRouterAdmin } from "./web-router-admin";
@@ -29,15 +31,17 @@ export class WebRouter extends Glass {
   private userController: UserController;
   private saasController: SaasController;
   private rootController: RootController;
+  private shoppingController: ShoppingController;
   
   private session: SessionService<UserSession>;
 
-  private platformRouter: WebRouterPlatform;
+  //private platformRouter: WebRouterPlatform;
   private userRouter: WebRouterUser;
   private saasRouter: WebRouterSaas;
   private adminRouter: WebRouterAdmin;
   private bundleRouter: WebRouterBundle;
   private rootRouter: WebRouterRoot;
+  private shoppingRouter: WebRouterShopping;
 
   private pgc: PostgresqlClientService;
 
@@ -53,26 +57,30 @@ export class WebRouter extends Glass {
     this.userController = deps.userController as UserController;
     this.saasController = deps.saasController as SaasController;
     this.rootController = deps.rootController as RootController;
+    this.shoppingController = deps.shoppingController as ShoppingController;
+    
     this.session = deps.sessionService as SessionService<UserSession>;
     this.pgc = deps.pgc as PostgresqlClientService;
 
     // Initialize sub-routers
-    this.platformRouter = new WebRouterPlatform(config, { app: this.app, pgc: this.pgc, platformController: this.platformController });
+    //this.platformRouter = new WebRouterPlatform(config, { app: this.app, pgc: this.pgc, platformController: this.platformController });
     this.userRouter = new WebRouterUser(config, { app: this.app, pgc: this.pgc, userController: this.userController });
     this.saasRouter = new WebRouterSaas(config, { app: this.app, pgc: this.pgc, saasController: this.saasController });
     this.adminRouter = new WebRouterAdmin(config, { app: this.app, pgc: this.pgc, adminController: this.adminController });
     this.bundleRouter = new WebRouterBundle(config, { app: this.app, pgc: this.pgc, bundleController: this.bundleController });
     this.rootRouter = new WebRouterRoot(config, { app: this.app, pgc: this.pgc, rootController: this.rootController });
+    this.shoppingRouter = new WebRouterShopping(config, { app: this.app, pgc: this.pgc, shoppingController: this.shoppingController, rootController: this.rootController });
   }
 
   public setupRoutes() {
     // Setup routes from all sub-routers
-    this.platformRouter.setupRoutes();
+    //this.platformRouter.setupRoutes();
     this.userRouter.setupRoutes();
     this.saasRouter.setupRoutes();
     this.adminRouter.setupRoutes();
     this.bundleRouter.setupRoutes();
     this.rootRouter.setupRoutes();
+    this.shoppingRouter.setupRoutes();
 
     // Catch-all for static files
     this.app.use(

@@ -8,12 +8,16 @@ import { SessionService, UserSession } from 'paykhom-fw/service/session-service'
 import { PostgresqlClientService } from 'paykhom-fw/service/postgresql-client-service';
 import { Container, IContainer, Lifetime } from 'paykhom-fw/container';
 import { ContainerProvider } from 'paykhom-fw/provider/container-provider';
+
 import BundleController from '../app/controller/bundle-controller';
 import { PlatformController } from "../app/controller/platform-controller";
 import { AdminController } from "../app/controller/admin-controller";
 import { UserController } from "../app/controller/user-controller";
 import { SaasController } from "../app/controller/saas-controller";
 import { RootController } from '../app/controller/root-controller';
+import { ShoppingController } from '../app/controller/shopping-controller';
+
+
 import { ExecutionContext } from 'hono';
 
 export class ApplicationServer extends WebServer implements IContainer {
@@ -70,6 +74,7 @@ export class ApplicationServer extends WebServer implements IContainer {
         this.register<UserController>("userController", (config, deps) => new UserController(config, deps), {}, ["pgc", "sessionService"]);
         this.register<SaasController>("saasController", (config, deps) => new SaasController(config, deps), {}, ["pgc", "sessionService"]);
         this.register<RootController>("rootController", (config, deps) => new RootController(config, deps), {}, ["pgc", "sessionService"]);
+        this.register<ShoppingController>("shoppingController", (config, deps) => new ShoppingController(config, deps), {}, ["pgc", "sessionService"]);
 
         // Register middlewares
         const sessionMiddleware = this.register<SessionMiddleware>(
@@ -90,7 +95,7 @@ export class ApplicationServer extends WebServer implements IContainer {
             "webRouter",
             (config, deps) => new WebRouter(config, deps),
             {},
-            ["app", "pgc", "platformController", "bundleController", "adminController", "userController", "saasController", "rootController", "sessionService"]
+            ["app", "pgc", "platformController", "bundleController", "adminController", "userController", "saasController", "rootController", "shoppingController", "sessionService"]
         );
 
         this.onError((error, c) => {

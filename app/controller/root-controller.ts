@@ -19,7 +19,7 @@ export class RootController extends Controller {
 
   /* HOwCOME THESE ARE ALREADY DUPLICATE ==>> LOOKS INCOMPLETE
   async onGetSignup(c: Context): Promise<Response> {
-    return this.render(c, "platform/signup", { meta: { title: "Paykhom Signup" } });
+    return await this.render(c, "platform/signup", { meta: { title: "Paykhom Signup" } });
   }
 
   async onPostSignup(c: Context): Promise<Response> {
@@ -30,7 +30,7 @@ export class RootController extends Controller {
   }
 
   async onGetLogin(c: Context): Promise<Response> {
-    return this.render(c, "login", { meta: { title: "Paykhom Login" } });
+    return await this.render(c, "login", { meta: { title: "Paykhom Login" } });
   }
 
   async onPostLogin(c: Context): Promise<Response> {
@@ -60,7 +60,7 @@ export class RootController extends Controller {
 
   async onGetLogout(c: Context): Promise<Response> {
     await this.ss.destroySession(c);
-    return this.render(c, "platform/logout", { meta: { title: "Paykhom Logout" } });
+    return await this.render(c, "platform/logout", { meta: { title: "Paykhom Logout" } });
   }
 
   async onPostLogout(c: Context): Promise<Response> {
@@ -71,7 +71,7 @@ export class RootController extends Controller {
   }
 
   async onGetForgotPassword(c: Context): Promise<Response> {
-    return this.render(c, "platform/forgot-password", { meta: { title: "Paykhom Forgot Password" } });
+    return await this.render(c, "platform/forgot-password", { meta: { title: "Paykhom Forgot Password" } });
   }
 
   async onPostForgotPassword(c: Context): Promise<Response> {
@@ -81,7 +81,7 @@ export class RootController extends Controller {
   }
 
   async onGetResetPassword(c: Context): Promise<Response> {
-    return this.render(c, "platform/reset-password", { meta: { title: "Paykhom Reset Password" } });
+    return await this.render(c, "platform/reset-password", { meta: { title: "Paykhom Reset Password" } });
   }
 
   async onPostResetPassword(c: Context): Promise<Response> {
@@ -90,31 +90,38 @@ export class RootController extends Controller {
     return c.json(result);
   }
 
-  */  
-  async onGetIndex(c: Context) {
-    return this.render(c, "index", { meta: { title: "Paykhom Platform" } });
+  */
+
+  
+  async onGetIndex(c: Context): Promise<Response> {
+    return await this.render(c, "index", { meta: { title: "Paykhom Platform" } });
+  }
+  
+  
+  // async onGetIndex(c: Context): Promise<Response> {
+  //   return await this.render(c, "index", { meta: { title: "Paykhom Platform" } });
+  // }
+
+
+
+  async onGetSignup(c: Context): Promise<Response> {
+    return await this.render(c, "signup", { meta: { title: "Paykhom Platform" } });
   }
 
 
 
-  async onGetSignup(c: Context) {
-    return this.render(c, "signup", { meta: { title: "Paykhom Platform" } });
+
+
+
+  async onGetLogin(c: Context): Promise<Response> {
+    return await this.render(c, "login", { meta: { title: "Paykhom Platform" } });
   }
 
-
-
-
-
-
-  async onGetLogin(c: Context) {
-    return this.render(c, "login", { meta: { title: "Paykhom Platform" } });
+  async onGetForgotPassword(c: Context): Promise<Response> {
+    return await this.render(c, "forgot-password", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetForgotPassword(c: Context) {
-    return this.render(c, "forgot-password", { meta: { title: "Paykhom Platform" } });
-  }
-
-  async onPostLogin(c: Context) {
+  async onPostLogin(c: Context): Promise<Response> {
     const payload = await c.req.json();
     const input = {
       email: payload.email,
@@ -150,7 +157,7 @@ export class RootController extends Controller {
     }
   }
 
-  async onPostSignup(c: Context) {
+  async onPostSignup(c: Context): Promise<Response> {
     const payload = await c.req.json();
 
     try {
@@ -175,7 +182,7 @@ export class RootController extends Controller {
     }
   }
 
-  async onPostForgotPassword(c: Context) {
+  async onPostForgotPassword(c: Context): Promise<Response> {
     const payload = await c.req.json();
 
     try {
@@ -186,23 +193,23 @@ export class RootController extends Controller {
     }
   }
 
-  async onGetLogout(c: Context) {
+  async onGetLogout(c: Context): Promise<Response> {
     //await this.ss.destroySession(c); // Clear entire session
     this.ss.updateSession(c, {isAuthenticated: false, isGuest: true, user: {}})
     return c.redirect('/');
   }
 
-  async onPostLogout(c: Context) {
+  async onPostLogout(c: Context): Promise<Response> {
     //await this.ss.destroySession(c); // Clear entire session
     this.ss.updateSession(c, {isAuthenticated: false, isGuest: true, user: {}})
     return c.json({ message: 'Success' }, 200);
   }
 
-  async onGetResetPassword(c: Context) {
-    return this.render(c, "reset-password", { meta: { title: "Paykhom Platform" } });
+  async onGetResetPassword(c: Context): Promise<Response> {
+    return await this.render(c, "reset-password", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onPostResetPassword(c: Context) {
+  async onPostResetPassword(c: Context): Promise<Response> {
     const payload = await c.req.json();
 
     try {
@@ -213,15 +220,101 @@ export class RootController extends Controller {
     }
   }
 
-  async onGetHandleForgotPassword(c: Context) {
+  async onGetHandleForgotPassword(c: Context): Promise<Response> {
     return c.json({ message: 'Not implemented' });
   }
 
-  async onPostHandleForgotPassword(c: Context) {
+  async onPostHandleForgotPassword(c: Context): Promise<Response> {
     return c.json({ message: 'Not implemented' });
   }
 
 
+
+
+
+
+
+
+
+
+
+
+  
+  async onGetInfoCompany(c: Context): Promise<Response> {
+    return await this.render(c, 'info/company', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoCareer(c: Context): Promise<Response> {
+    return await this.render(c, 'info/career', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoAbout(c: Context): Promise<Response> {
+    return await this.render(c, 'info/about', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoHelp(c: Context): Promise<Response> {
+    return await this.render(c, 'info/help', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoValue(c: Context): Promise<Response> {
+    return await this.render(c, 'info/value', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoPayment(c: Context): Promise<Response> {
+    return await this.render(c, 'info/payment', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoShipping(c: Context): Promise<Response> {
+    return await this.render(c, 'info/shipping', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoReturn(c: Context): Promise<Response> {
+    return await this.render(c, 'info/returns', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoFaq(c: Context): Promise<Response> {
+    return await this.render(c, 'info/faq', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoCheckout(c: Context): Promise<Response> {
+    return await this.render(c, 'info/checkout', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoOpportunity(c: Context): Promise<Response> {
+    return await this.render(c, 'info/opportunity', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoEntrepreneur(c: Context): Promise<Response> {
+    return await this.render(c, 'info/entrepreneur', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoEarning(c: Context): Promise<Response> {
+    return await this.render(c, 'info/earning', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoIdea(c: Context): Promise<Response> {
+    return await this.render(c, 'info/idea', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoRetailer(c: Context): Promise<Response> {
+    return await this.render(c, 'info/retailer', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoGiftCard(c: Context): Promise<Response> {
+    return await this.render(c, 'info/gift-card', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoPromo(c: Context): Promise<Response> {
+    return await this.render(c, 'info/promo', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoAd(c: Context): Promise<Response> {
+    return await this.render(c, 'info/ad', { meta: { title: 'Dashboard' } });
+  }
+
+  async onGetInfoContact(c: Context): Promise<Response> {
+    return await this.render(c, 'info/contact', { meta: { title: 'Dashboard' } });
+  }
 
 
 
@@ -234,15 +327,15 @@ export class RootController extends Controller {
 
 
 
-  async onGetCustomerDashboard(c: Context) {
-    return this.render(c, "customer/dashboard", { meta: { title: "Paykhom Platform" } });
+  async onGetCustomerDashboard(c: Context): Promise<Response> {
+    return await this.render(c, "customer/dashboard", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetAdminDashboard(c: Context) {
-    return this.render(c, "admin/dashboard", { meta: { title: "Paykhom Platform" } });
+  async onGetAdminDashboard(c: Context): Promise<Response> {
+    return await this.render(c, "admin/dashboard", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onPostGetUserData(c: Context) {
+  async onPostGetUserData(c: Context): Promise<Response> {
     const user = (await this.ss.get(c, 'user')) || null;
     return c.json({ user }, 200);
   }
@@ -307,81 +400,6 @@ export class RootController extends Controller {
     return html;
   }
 
-  async onGetInfoCompany(c: Context) {
-    return this.render(c, 'Info/Company', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoCareer(c: Context) {
-    return this.render(c, 'Info/Career', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoAbout(c: Context) {
-    return this.render(c, 'Info/About', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoHelp(c: Context) {
-    return this.render(c, 'Info/Help', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoValue(c: Context) {
-    return this.render(c, 'Info/Value', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoPayment(c: Context) {
-    return this.render(c, 'Info/Payment', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoShipping(c: Context) {
-    return this.render(c, 'Info/Shipping', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoReturn(c: Context) {
-    return this.render(c, 'Info/Returns', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoFaq(c: Context) {
-    return this.render(c, 'Info/Faq', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoCheckout(c: Context) {
-    return this.render(c, 'Info/Checkout', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoOpportunity(c: Context) {
-    return this.render(c, 'Info/Opportunity', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoEntrepreneur(c: Context) {
-    return this.render(c, 'Info/Entrepreneur', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoEarning(c: Context) {
-    return this.render(c, 'Info/Earning', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoIdea(c: Context) {
-    return this.render(c, 'Info/Idea', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoRetailer(c: Context) {
-    return this.render(c, 'Info/Retailer', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoGiftCard(c: Context) {
-    return this.render(c, 'Info/GiftCard', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoPromo(c: Context) {
-    return this.render(c, 'Info/Promo', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoAd(c: Context) {
-    return this.render(c, 'Info/Ad', { meta: { title: 'Dashboard' } });
-  }
-
-  async onGetInfoContact(c: Context) {
-    return this.render(c, 'Info/Contact', { meta: { title: 'Dashboard' } });
-  }
 
   */
 }

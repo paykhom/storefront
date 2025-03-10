@@ -16,7 +16,7 @@ export class PlatformController extends Controller {
   }
 
   async onGetIndex(c: Context): Promise<Response> {
-    return this.render(c, "index", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "index", { meta: { title: "Paykhom Platform" } });
   }
 
 
@@ -40,126 +40,126 @@ export class PlatformController extends Controller {
   }
 
   async onGetStartupIndex(c: Context): Promise<Response> {
-    return this.render(c, "platform/index", {});
+    return await this.render(c, "platform/index", {});
   }
 
   async onGetStartupWebsite(c: Context): Promise<Response> {
-    return this.render(c, "platform/website", {});
+    return await this.render(c, "platform/website", {});
   }
 
   async onGetStartupWebsiteTheme(c: Context): Promise<Response> {
-    return this.render(c, "platform/theme", {});
+    return await this.render(c, "platform/theme", {});
   }
 
   async onGetStartupWebsiteApps(c: Context): Promise<Response> {
-    return this.render(c, "platform/apps", {});
+    return await this.render(c, "platform/apps", {});
   }
 
   async onGetStartupWebsiteDomains(c: Context): Promise<Response> {
-    return this.render(c, "platform/domains", {});
+    return await this.render(c, "platform/domains", {});
   }
 
   async onGetStartupWebsiteTools(c: Context): Promise<Response> {
-    return this.render(c, "platform/tools", {});
+    return await this.render(c, "platform/tools", {});
   }
 
   async onGetSell(c: Context): Promise<Response> {
-    return this.render(c, "platform/sell", {});
+    return await this.render(c, "platform/sell", {});
   }
 
   async onGetSellCheckout(c: Context): Promise<Response> {
-    return this.render(c, "platform/checkout", {});
+    return await this.render(c, "platform/checkout", {});
   }
 
   async onGetSellOnline(c: Context): Promise<Response> {
-    return this.render(c, "platform/online", {});
+    return await this.render(c, "platform/online", {});
   }
 
   async onGetSellChannel(c: Context): Promise<Response> {
-    return this.render(c, "platform/channels", {});
+    return await this.render(c, "platform/channels", {});
   }
 
   async onGetSellPos(c: Context): Promise<Response> {
-    return this.render(c, "platform/pos", {});
+    return await this.render(c, "platform/pos", {});
   }
 
   async onGetSellInternational(c: Context): Promise<Response> {
-    return this.render(c, "platform/international", {});
+    return await this.render(c, "platform/international", {});
   }
 
   async onGetSellB2B(c: Context): Promise<Response> {
-    return this.render(c, "platform/b2b", {});
+    return await this.render(c, "platform/b2b", {});
   }
 
   async onGetSellPayment(c: Context): Promise<Response> {
-    return this.render(c, "platform/payments", {});
+    return await this.render(c, "platform/payments", {});
   }
 
   async onGetMarket(c: Context): Promise<Response> {
-    return this.render(c, "platform/marketing", {});
+    return await this.render(c, "platform/marketing", {});
   }
 
   async onGetMarketFacebookInstagram(c: Context): Promise<Response> {
-    return this.render(c, "platform/facebookInstagram", {});
+    return await this.render(c, "platform/facebookInstagram", {});
   }
 
   async onGetMarketInbox(c: Context): Promise<Response> {
-    return this.render(c, "platform/inbox", {});
+    return await this.render(c, "platform/inbox", {});
   }
 
   async onGetMarketEmailMarketing(c: Context): Promise<Response> {
-    return this.render(c, "platform/emailMarketing", {});
+    return await this.render(c, "platform/emailMarketing", {});
   }
 
   async onGetSegmentation(c: Context): Promise<Response> {
-    return this.render(c, "platform/segmentation", {});
+    return await this.render(c, "platform/segmentation", {});
   }
 
   async onGetManage(c: Context): Promise<Response> {
-    return this.render(c, "platform/manage", {});
+    return await this.render(c, "platform/manage", {});
   }
 
   async onGetFinance(c: Context): Promise<Response> {
-    return this.render(c, "platform/finance", {});
+    return await this.render(c, "platform/finance", {});
   }
 
   async onGetAnalytics(c: Context): Promise<Response> {
-    return this.render(c, "platform/analytics", {});
+    return await this.render(c, "platform/analytics", {});
   }
 
   async onGetShipping(c: Context): Promise<Response> {
-    return this.render(c, "platform/shipping", {});
+    return await this.render(c, "platform/shipping", {});
   }
 
   async onGetOrders(c: Context): Promise<Response> {
-    return this.render(c, "platform/orders", {});
+    return await this.render(c, "platform/orders", {});
   }
 
   async onGetFulfillment(c: Context): Promise<Response> {
-    return this.render(c, "platform/fulfillment", {});
+    return await this.render(c, "platform/fulfillment", {});
   }
 
   async onGetFlow(c: Context): Promise<Response> {
-    return this.render(c, "platform/flow", {});
+    return await this.render(c, "platform/flow", {});
   }
 
   async onGetHelp(c: Context): Promise<Response> {
-    return this.render(c, "platform/help", {});
+    return await this.render(c, "platform/help", {});
   }
 
   async onGetPopularTopics(c: Context): Promise<Response> {
-    return this.render(c, "platform/popularTopics", {});
+    return await this.render(c, "platform/popularTopics", {});
   }
 
   async onGetEssentialTools(c: Context): Promise<Response> {
-    return this.render(c, "platform/essentialTools", {});
+    return await this.render(c, "platform/essentialTools", {});
   }
 
   async onGetPricing(c: Context): Promise<Response> {
-    return this.render(c, "platform/pricing", {});
+    return await this.render(c, "platform/pricing", {});
   }
 
   async onGetEnterprise(c: Context): Promise<Response> {
-    return this.render(c, "platform/enterprise", {});
+    return await this.render(c, "platform/enterprise", {});
   }
 }

@@ -5,6 +5,20 @@ import { BaseController as Controller } from './base-controller';
 import { PostgresqlClientService } from 'paykhom-fw/service/postgresql-client-service';
 import { SessionService, UserSession } from 'paykhom-fw/service/session-service';
 
+interface CartItem {
+  product_variant_id: number;
+  title: string;
+  particulars: string;
+  quantity: number | string; // Some values are strings
+  uom_id: number;
+  currency_id: number;
+  rate: string;
+  total: string;
+  product_media_path: string | null;
+  link_product_slug: string;
+  list_price: string;
+}
+
 export class UserController extends Controller {
   private pg: PostgresqlClientService;
   private ss: SessionService<UserSession>;
@@ -22,57 +36,57 @@ export class UserController extends Controller {
 
   // PAGINATORS
 
-  async onGetPaymentMethodPaginator(c: Context) {
-    return this.render(c, "user/payment-method-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetPaymentMethodPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/payment-method-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetBuyReturnPaginator(c: Context) {
-    return this.render(c, "user/buy-return-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetBuyReturnPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/buy-return-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetBuyPaymentPaginator(c: Context) {
-    return this.render(c, "user/buy-payment-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetBuyPaymentPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/buy-payment-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetAffiliationPaginator(c: Context) {
-    return this.render(c, "user/affiliation-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetAffiliationPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/affiliation-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetRefundPaginator(c: Context) {
-    return this.render(c, "user/refund-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetRefundPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/refund-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetAddressPaginator(c: Context) {
-    return this.render(c, "user/address-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetAddressPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/address-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetNotificationPaginator(c: Context) {
-    return this.render(c, "user/notification-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetNotificationPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/notification-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetTicketPaginator(c: Context) {
-    return this.render(c, "user/ticket-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetTicketPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/ticket-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetProductReviewPaginator(c: Context) {
-    return this.render(c, "user/product-review-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetProductReviewPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/product-review-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetShopReviewPaginator(c: Context) {
-    return this.render(c, "user/shop-review-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetShopReviewPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/shop-review-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetShoppingBuyPaginator(c: Context) {
-    return this.render(c, "user/shop-review-paginator", { meta: { title: "Paykhom Platform" } });
+  async onGetShoppingBuyPaginator(c: Context): Promise<Response> {
+    return await this.render(c, "user/shop-review-paginator", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetOrderPaginator(c: Context) {
+  async onGetOrderPaginator(c: Context): Promise<Response> {
     const us: UserSession = await this.ss.getSession(c) || {};
     const user = us.user || { user_id: 0 };
     const input = {};
     try {
       const result = await this.pg.fx('ecom.sales_order__paginate__by_user', input);
-      return this.render(c, "user/order-paginator", { so: [], meta: { title: "Paykhom Platform" } });
+      return await this.render(c, "user/order-paginator", { so: [], meta: { title: "Paykhom Platform" } });
     } catch (error) {
       return c.json({ error: 'Failed to fetch orders' }, 500);
     }
@@ -80,69 +94,69 @@ export class UserController extends Controller {
 
   // EDITORS
 
-  async onGetPaymentMethodEditor(c: Context) {
+  async onGetPaymentMethodEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/payment-method-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/payment-method-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetBuyReturnEditor(c: Context) {
+  async onGetBuyReturnEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/buy-return-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/buy-return-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetBuyPaymentEditor(c: Context) {
+  async onGetBuyPaymentEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/buy-payment-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/buy-payment-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetAffiliationEditor(c: Context) {
+  async onGetAffiliationEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/affiliation-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/affiliation-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetRefundEditor(c: Context) {
+  async onGetRefundEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/refund-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/refund-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetAddressEditor(c: Context) {
+  async onGetAddressEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/address-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/address-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetNotificationEditor(c: Context) {
+  async onGetNotificationEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/notification-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/notification-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetTicketEditor(c: Context) {
+  async onGetTicketEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/ticket-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/ticket-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetProductReviewEditor(c: Context) {
+  async onGetProductReviewEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/product-review-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/product-review-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetShopReviewEditor(c: Context) {
+  async onGetShopReviewEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/shop-review-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/shop-review-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetShoppingBuyEditor(c: Context) {
+  async onGetShoppingBuyEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
-    return this.render(c, "user/shop-review-editor", { meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/shop-review-editor", { meta: { title: "Paykhom Platform" } });
   }
 
-  async onGetOrderEditor(c: Context) {
+  async onGetOrderEditor(c: Context): Promise<Response> {
     const id = c.req.param('id');
     const us : UserSession = await this.ss.getSession(c) || {};
     const user = us.user || { user_id: 0 };
     const input = { user_id: user.user_id };
     try {
       const result = await this.pg.fx('ecom.sales_order__paginate__by_user', input);
-      return this.render(c, "user/order-editor", { so: result.ret_data || [], meta: { title: "Paykhom Platform" } });
+      return await this.render(c, "user/order-editor", { so: result.ret_data || [], meta: { title: "Paykhom Platform" } });
     } catch (error) {
       return c.json({ error: 'Failed to fetch order' }, 500);
     }
@@ -150,11 +164,11 @@ export class UserController extends Controller {
 
   // OTHERS
 
-  async viewIndexOnGet(c: Context) {
-    return this.render(c, "user/index", { meta: { title: "Paykhom Platform" } });
+  async viewIndexOnGet(c: Context): Promise<Response> {
+    return await this.render(c, "user/index", { meta: { title: "Paykhom Platform" } });
   }
 
-  async viewCartOnGet(c: Context) {
+  async viewCartOnGet(c: Context): Promise<Response> {
     const us: UserSession = await this.ss.getSession(c) || {};
     const cart = us.cart || [];
     let total_amount = 0;
@@ -167,22 +181,28 @@ export class UserController extends Controller {
     const total_grand = total_amount + total_delivery_charge;
 
     const checkout = { total_amount, total_delivery_charge, total_grand, cart };
-    return this.render(c, "user/cart", { checkout, meta: { title: "Paykhom Platform" } });
+    return await this.render(c, "user/cart", { checkout, meta: { title: "Paykhom Platform" } });
   }
 
-  async onPostPlaceOrder(c: Context) {
+  async onPostPlaceOrder(c: Context): Promise<Response> {
     const SALES_ORDER_STATUS__ORDER_PLACED = 4;
     const payload = await c.req.json();
 
     const us: UserSession = await this.ss.getSession(c) || {};
     const user =  us.user || { user_id: 0 };
-    const cart = us.cart || [];
+    //const cart = us.cart || [];
+    const cart: Record<string, CartItem> =  us?.cart || {};
 
 
     payload.user_id = user.user_id;
     payload.cart = cart;
 
-    payload.subtotal = cart.reduce((sum: number, item: any) => sum + (item.rate * item.quantity), 0);
+    // payload.subtotal = cart.reduce((sum: number, item: any) => sum + (item.rate * item.quantity), 0);
+    payload.subtotal = Object.values(cart).reduce(
+      (sum: number, item: any) => sum + (parseFloat(item.rate) * parseFloat(item.quantity)), 
+      0
+    );
+    
     payload.shipping_charge = payload.subtotal * 0.02 || 0.0;
     payload.total = payload.subtotal + payload.shipping_charge;
 
@@ -191,7 +211,7 @@ export class UserController extends Controller {
       const salesOrderId = result?.sales_order_id;
 
       if (salesOrderId > 0) {
-        await this.ss.forget(c, 'cart'); // Clear cart from session
+        await this.ss.updateSession(c, {cart:{}}); // Clear cart from session
         await this.pg.fx('ecom.sales_order__change_status', {
           sales_order_id: salesOrderId,
           sales_order_status_id: SALES_ORDER_STATUS__ORDER_PLACED
@@ -204,24 +224,49 @@ export class UserController extends Controller {
     }
   }
 
-  async viewCheckoutOnGet(c: Context) {
-    //const cart = (await this.ss.get(c, 'cart')) || [];
-    const cart = (await this.ss.getSession(c))?.cart || {  };
+  // async viewCheckoutOnGet(c: Context): Promise<Response> {
+  //   //const cart = (await this.ss.get(c, 'cart')) || [];
+  //   let us: UserSession = (await this.ss.getSession(c));
+  //   const cart = us?.cart || {  };
+
+  //   let total_amount = 0;
+  //   let total_delivery_charge = 0;
+
+
+
+  //   for (const item of cart) {
+  //     total_amount += item.total;
+  //     total_delivery_charge += item.total * 0.02;
+  //   }
+  //   const total_grand = total_amount + total_delivery_charge;
+
+  //   const checkout = { total_amount, total_delivery_charge, total_grand, cart };
+  //   return await this.render(c, "user/checkout", { checkout, meta: { title: "Paykhom Platform" } });
+  // }
+
+  async viewCheckoutOnGet(c: Context): Promise<Response> {
+    let us: UserSession = (await this.ss.getSession(c)) || {};
+    //const cart = us?.cart || {};
+    const cart: Record<string, CartItem> =  us?.cart || {};
 
     let total_amount = 0;
     let total_delivery_charge = 0;
 
-    for (const item of cart) {
-      total_amount += item.total;
-      total_delivery_charge += item.total * 0.02;
+    for (const item of Object.values(cart)) {
+        const totalValue = parseFloat(item.total); // Ensure correct numeric conversion
+        total_amount += totalValue;
+        total_delivery_charge += totalValue * 0.02;
     }
+
     const total_grand = total_amount + total_delivery_charge;
 
     const checkout = { total_amount, total_delivery_charge, total_grand, cart };
-    return this.render(c, "user/checkout", { checkout, meta: { title: "Paykhom Platform" } });
-  }
+    return await this.render(c, "user/checkout", { checkout, meta: { title: "Paykhom Platform" } });
+    // return c.json(JSON.stringify(checkout));
+}
 
-  async viewOrderOnGet(c: Context) {
+
+  async viewOrderOnGet(c: Context): Promise<Response> {
     const salesOrderId = c.req.param('sales_order_id');
     //const user = (await this.ss.get(c, 'user')) || { user_id: 0 };
     const user = (await this.ss.getSession(c))?.user || { user_id: 0 };
@@ -230,24 +275,24 @@ export class UserController extends Controller {
         user_id: user.user_id,
         sales_order_id: salesOrderId
       });
-      return this.render(c, "user/order-single", { so: result.ret_data?.[0] || {}, meta: { title: "Paykhom Platform" } });
+      return await this.render(c, "user/order-single", { so: result.ret_data?.[0] || {}, meta: { title: "Paykhom Platform" } });
     } catch (error) {
       return c.json({ error: 'Failed to fetch order' }, 500);
     }
   }
 
-  async viewProfileOnGet(c: Context) {
+  async viewProfileOnGet(c: Context): Promise<Response> {
     const user = (await this.ss.getSession(c))?.user || { user_id: 0 };
     const input = { user_id: user.user_id };
     try {
       const result = await this.pg.fx('saas.user__fetch__self', input);
-      return this.render(c, "user/profile", { u: result.ret_data || [], meta: { title: "Paykhom Platform" } });
+      return await this.render(c, "user/profile", { u: result.ret_data || [], meta: { title: "Paykhom Platform" } });
     } catch (error) {
       return c.json({ error: 'Failed to fetch profile' }, 500);
     }
   }
 
-  async onPostUpdateProfile(c: Context) {
+  async onPostUpdateProfile(c: Context): Promise<Response> {
     const input = await c.req.json();
     try {
       const result = await this.pg.fx('saas.user__update_profile__self', input);

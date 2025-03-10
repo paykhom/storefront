@@ -2,6 +2,7 @@
   
 //use App\Views\MasterLayout;
 
+import MasterLayout from "../master-layout";
 
 export default class OrderAll extends MasterLayout {
   
@@ -62,7 +63,7 @@ yield html`
                               <tbody>
                                  <!-- Table body -->
                                  <!-- s.sales_order_id, u.full_name, s.created_at, sos.title as sales_order_status_title, s.total -->
-`; foreach(this.so as $o) { `
+`; foreach(this.so as $o) { yield html`
                                     <tr>
                                     <td class="align-middle border-top-0">
                                        <a href="#" class="text-inherit">`$o["sales_order_id"] `</a>

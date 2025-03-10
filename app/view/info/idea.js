@@ -139,7 +139,7 @@ yield html`
 
 <script>
 
-export default class Page extends MarketplaceLayout {
+class Page extends MarketplaceLayout {
 
     constructor(params) {
         super(params);
