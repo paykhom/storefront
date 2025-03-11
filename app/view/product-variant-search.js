@@ -1,5 +1,3 @@
-//`;namespace App\Views\Shopping;
-  
 import MarketplaceLayout from "./marketplace-layout";
 
 
@@ -179,7 +177,7 @@ yield html`
 for (const cat of this.sub_categories ?? []) {
 
    yield html`
-                     <a style="border: 1px solid gray" href="/shopping/category/${cat["slug"]}/page/1">${cat["title"]}(${cat["tally"]})</a>
+                     <a style="border: 1px solid gray" href="/shopping/category/${cat['slug']}/page/1">${cat['title']}(${cat['tally']})</a>
 `; 
 } 
    yield html`
@@ -293,7 +291,7 @@ for (const attrib of this.attribs ?? []) {
    yield html`
                            <div class="mb-8 filter-container ws-box bg-bt-white my-border" xstyle="border: 1px solid #f1f1f1; padding: 4px">
                               <div class="filter-label" style="border-bottom: 1px solid #f2f4f8">
-                                 <span class="h5 mb-3">${attrib["title"]}</span>
+                                 <span class="h5 mb-3">${attrib['title']}</span>
                               </div>
                               <!-- <div class="my-4">
                                  
@@ -302,19 +300,19 @@ for (const attrib of this.attribs ?? []) {
                               <div class="my-scrollbar filter-body show">
 
    `; 
-   //foreach($attrib["attrib_value"]??[] as $av) { 
-   for (const av of attrib["attrib_value"] ?? []) {
+   //foreach($attrib['attrib_value']??[] as $av) { 
+   for (const av of attrib['attrib_value'] ?? []) {
 
       yield html`
 
                                  <!-- form check -->
                               <div class="form-check mb-2 mt-1 ms-1">
                                  <!-- input -->
-                                 <input class="form-check-input form-check-input-filter-av" type="checkbox" value="${av["content"]}" id="apav_${attrib["attrib_id"]}" ${(this.pvav.hasOwnProperty(attrib.attrib_id) && 
+                                 <input class="form-check-input form-check-input-filter-av" type="checkbox" value="${av['content']}" id="apav_${attrib['attrib_id']}" ${(this.pvav.hasOwnProperty(attrib.attrib_id) && 
  this.pvav[attrib.attrib_id].includes(av.content)) 
   ? "checked" 
   : ""} >
-                                 <label class="form-check-label" for="apav_${attrib["attrib_id"]}">${av["content"]}</label>
+                                 <label class="form-check-label" for="apav_${attrib['attrib_id']}">${av['content']}</label>
                               </div>
    `; 
    }    
@@ -343,7 +341,7 @@ yield html`
                         <div class="mb-3 mb-lg-0">
                            <p class="mb-0">
                               <span class="h5" style="xtext-weight:bold">${this.category_title} / </span>
-                              <span id="productCount" class="text-dark">${this.options["rowCount"]}</span>
+                              <span id="productCount" class="text-dark">${this.options['rowCount']}</span>
                               Products found
                            </p>
                         </div>
@@ -357,12 +355,14 @@ if (this.options['productViewType'] == 'grid') {
 yield html`                                 
                                  <a id="productListViewAnchor" href="" class="text-muted me-3 productViewSwitch"><i id="productListView" class="bi bi-list-ul"></i></a>
                                  <a id="productGridViewAnchor" href="" class="me-3 active productViewSwitch"><i id="productGridView" class="bi bi-grid"></i></a>
-`;} 
+`;
+} 
 else {
 yield html`                                 
                                  <a id="productListViewAnchor" href="" class="me-3 active productViewSwitch"><i id="productListView" class="bi bi-list-ul"></i></a>
                                  <a id="productGridViewAnchor" href="" class="text-muted me-3 productViewSwitch"><i id="productGridView" class="bi bi-grid"></i></a>
-`;}
+`;
+}
 yield html`
                                  <!-- <a id="productListViewAnchor" href="" class="text-muted me-3 productViewSwitch"><i id="productListView" class="bi bi-list-ul"></i></a>
                                  <a id="productGridViewAnchor" href="" class="me-3 active productViewSwitch"><i id="productGridView" class="bi bi-grid"></i></a> -->
@@ -405,9 +405,6 @@ yield html`
                                     <option value="pl2h" ${this.options['orderBy'] == 'pl2h' ? 'selected' : ''}>Price: Low to High</option>
                                     <option value="ph2l" ${this.options['orderBy'] == 'ph2l' ? 'selected' : ''}>Price: High to Low</option>
                                     <option value="idh2l" ${this.options['orderBy'] == 'idh2l' ? 'selected' : ''}>Latest Arrivals</option>
-                                    <!-- Uncomment if needed -->
-                                    <!-- <option value="Release Date" ${this.options['orderBy'] == 'Release Date' ? 'selected' : ''}>Release Date</option> -->
-                                    <!-- <option value="Avg. Rating" ${this.options['orderBy'] == 'Avg. Rating' ? 'selected' : ''}>Avg. Rating</option> -->
                                  </select>
 
                               </div>
@@ -415,9 +412,9 @@ yield html`
                         </div>
                      </div>
                      <!-- row -->
-                     <div id="productViewContainer" class="${(this.options['productViewType'] === 'grid') 
-  ? "row g-4 row-cols-xxl-6 row-cols-xl-6 row-cols-lg-4 row-cols-2 row-cols-md-2 mt-2 product-view-container" 
-  : "row g-4 row-cols-1 mt-2 product-view-container"}">
+                     <div id="productViewContainer" class="${(this.options['productViewType'] === 'grid' 
+  ? 'row g-4 row-cols-xxl-6 row-cols-xl-6 row-cols-lg-4 row-cols-2 row-cols-md-2 mt-2 product-view-container' 
+  : 'row g-4 row-cols-1 mt-2 product-view-container')}">
 
 `; 
    //foreach(this.products??[] as $product) { 
@@ -431,25 +428,25 @@ yield html`
                               <div class="card card-product" style="height: 500px; display: flex; flex-direction: column; justify-content: space-between;">
                                  <div class="card-body">
                                        <div class="text-center position-relative">
-                                          <a href="/shopping/product-variant/${product["slug"]}">
-                                             <img  loading="lazy" data-src="${product["logo_image"]}" alt="" class="mb-3 img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
+                                          <a href="/shopping/product-variant/${product['slug']}">
+                                             <img  loading="lazy" data-src="${product['logo_image']}" alt="" class="mb-3 img-fluid" style="max-height: 200px; width: 100%; object-fit: cover;">
                                           </a>
                                        </div>
                                        <h2 class="fs-6" style="height: 150px; overflow: hidden; text-overflow: ellipsis; white-space: normal;">
-                                          <a href="/shopping/product-variant/${product["slug"]}" class="text-inherit text-decoration-none">${product["title"]}</a>
+                                          <a href="/shopping/product-variant/${product['slug']}" class="text-inherit text-decoration-none">${product['title']}</a>
                                        </h2>
                                        <ul style = "max-height: 100px;">
 `;  
   let count = 0;
   //FIX IT: NOT WORKING
-  //foreach ($product["product_variant_detail"]??[] as $item) {
-  for (const item of product["product_variant_detail"] ?? []) {
+  //foreach ($product['product_variant_detail']??[] as $item) {
+  for (const item of product['product_variant_detail'] ?? []) {
 
     if(count >= 3) {
         break; // exit loop after processing the first 5 items
     }
     yield html`
-    											<li title="${item["content"]}" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>${item["attrib_title"]}:&nbsp;</b>${item["content"]}</li>
+    											<li title="${item['content']}" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><b>${item['attrib_title']}:&nbsp;</b>${item['content']}</li>
 
 `;    
    count++;
@@ -468,19 +465,19 @@ yield html`
                                        </div> -->
                                        <div class="d-flex justify-content-between align-items-center mt-3">
                                           <div>
-                                             <span class="text-dark">${product["price"]}</span>
-                                             <span class="text-decoration-line-through text-muted">${product["list_price"]}</span>
+                                             <span class="text-dark">${product['price']}</span>
+                                             <span class="text-decoration-line-through text-muted">${product['list_price']}</span>
                                           </div>
                                           <div>
                                              <a 
                                                 href="#!" 
                                                 class="btn btn-primary btn-sm pvs-btn-add-to-cart" 
-                                                data-product-variant-id="${product["product_variant_id"]}" 
-                                                data-product-price="${product["price"]}" 
-                                                data-product-title="${product["title"]}" 
-                                                data-product-media-path="${product["logo_image"]}" 
-                                                data-product-link-product-slug="${product["slug"]}" 
-                                                data-product-list-price="${product["list_price"]}">
+                                                data-product-variant-id="${product['product_variant_id']}" 
+                                                data-product-price="${product['price']}" 
+                                                data-product-title="${product['title']}" 
+                                                data-product-media-path="${product['logo_image']}" 
+                                                data-product-link-product-slug="${product['slug']}" 
+                                                data-product-list-price="${product['list_price']}">
                                                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
                                                       <line x1="12" y1="5" x2="12" y2="19"></line>
                                                       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -513,9 +510,9 @@ yield html`
                                              <span class="badge bg-danger">Sale</span>
                                           </div> 
                                           -->
-                                          <a href="/shopping/product-variant/${product["slug"]}">
+                                          <a href="/shopping/product-variant/${product['slug']}">
                                              <!-- img -->
-                                             <img  loading="lazy" data-src="${product["logo_image"]}" alt="" class="mb-3 img-fluid">
+                                             <img  loading="lazy" data-src="${product['logo_image']}" alt="" class="mb-3 img-fluid">
                                           </a>
                                        </div>
                                     </div>
@@ -525,7 +522,7 @@ yield html`
                                           <a href="#!" class="text-decoration-none text-muted"><small>Snack &amp; Munchies</small></a>
                                        </div>
                                        <h2 class="fs-6">
-                                          <a href="/shopping/product-variant/${product["slug"]}" class="text-inherit text-decoration-none">${product["title"]}</a>
+                                          <a href="/shopping/product-variant/${product['slug']}" class="text-inherit text-decoration-none">${product['title']}</a>
                                        </h2>
                                        
                                        <!-- <div>
@@ -542,11 +539,11 @@ yield html`
                                        <div class="mt-6">
                                           <!-- price -->
                                           <div>
-                                             <span class="text-dark">${product["price"]}</span>
-                                             <span class="text-decoration-line-through text-muted">${product["list_price"]}</span>
+                                             <span class="text-dark">${product['price']}</span>
+                                             <span class="text-decoration-line-through text-muted">${product['list_price']}</span>
                                           </div>
                                           <div class="mt-2">
-                                             <a href="#!" class="btn btn-primary pvs-btn-add-to-cart"  data-product-variant-id="${product["product_variant_id"]}" data-product-price="${product["price"]}" data-product-title="${product["title"]}" data-product-media-path="/theme/freshcart/assets/images/product-single-img-1.jpg" data-product-link-product-slug="${product["slug"]}" data-product-list-price="${product["list_price"]}">
+                                             <a href="#!" class="btn btn-primary pvs-btn-add-to-cart"  data-product-variant-id="${product['product_variant_id']}" data-product-price="${product['price']}" data-product-title="${product['title']}" data-product-media-path="/theme/freshcart/assets/images/product-single-img-1.jpg" data-product-link-product-slug="${product['slug']}" data-product-list-price="${product['list_price']}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-bag me-2">
                                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                                                    <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -742,15 +739,15 @@ yield html`
 
             this.productView = new ProductView();
 
-            this.options = ~json_encode(this.options)~;
+            this.options = ${JSON.stringify(this.options)};
 
                                                    
                this.kv = {
-                  "page": ~json_encode((this.options['currentPage'])) ~,
-                  "limit": ~json_encode((this.options['limit'])) ~,
-                  "order": ~; echo json_encode((this.options['orderBy'])) ~,
-                  "view": ~; echo json_encode(($this.options['productViewType'])) ~,
-                  "slug": ~; echo json_encode((this.options['slug'])) ~
+                  "page": this.options['currentPage'],
+                  "limit": this.options['limit'],
+                  "order": this.options['orderBy'],
+                  "view": this.options['productViewType'],
+                  "slug": this.options['slug']
                };
                this.kv.order = this.kv.order.trim(); //QUICK_FIX
                this.kv.view = this.kv.view.trim(); //QUICK_FIX
@@ -775,7 +772,7 @@ yield html`
             };
 
             //this.product_variant_detail = {};
-            this.product_variant_detail = ~json_encode(this.pvav, true) ~;
+            this.product_variant_detail = ${JSON.stringify(this.pvav)};
             if (Array.isArray(this.product_variant_detail) && this.product_variant_detail.length == 0) {
                this.product_variant_detail = {};
             }
@@ -1021,7 +1018,7 @@ yield html`
 
          async refreshProductsData() {
             let offset = ((this.productSearchParams.page-1) * this.productSearchParams.limit);
-            this.productSearchParams["offset"] = offset;
+            this.productSearchParams['offset'] = offset;
             
             let url = ~/shopping/category/~{this.productSearchParams.product.category_slug}/page/~{this.productSearchParams.page}/limit/~{this.productSearchParams.limit}/order/~{this.productSearchParams.order}/view/~{this.productViewType}~;
 

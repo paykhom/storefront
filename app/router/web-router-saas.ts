@@ -2,10 +2,10 @@
 
 import { Hono } from "hono";
 import { SaasController } from "../controller/saas-controller";
-import { Glass } from "paykhom-fw/glass";
-import { ApplicationServer } from "../../server";
+import { TClass } from "paykhom-fw/tclass";
+import { ApplicationServer } from "../../container";
 
-export class WebRouterSaas extends Glass {
+export class WebRouterSaas extends TClass {
   private app: ApplicationServer;
   private saasController: SaasController;
 

@@ -2,10 +2,10 @@
 
 import { Hono } from "hono";
 import { BundleController } from "../controller/bundle-controller";
-import { Glass } from "paykhom-fw/glass";
-import { ApplicationServer } from "../../server";
+import { TClass } from "paykhom-fw/tclass";
+import { ApplicationServer } from "../../container";
 
-export class WebRouterBundle extends Glass {
+export class WebRouterBundle extends TClass {
   private app: ApplicationServer;
   private bundleController: BundleController;
 

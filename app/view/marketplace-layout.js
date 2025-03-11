@@ -1,4 +1,4 @@
-import View from "paykhom-fw/view";
+import View from "paykhom-fw/app/view";
 
 
 export default class MarketplaceLayout extends View /* TODO: Theme*/ {
@@ -164,9 +164,9 @@ yield html`
                   </div>
 
                   <div class="col-xl-9 col-lg-4 col-5 d-md-flex align-items-center justify-content-end">
-                     <a href="#" class="text-reset">Support</a>
-                     <a href="#" class="mx-md-8 ms-4 text-reset">Delivery</a>
-                     <a href="#" class="text-reset d-none d-md-block">Warranty</a>
+                     <a href="https://www.paykhom.com" class="text-reset">Marketplace</a>
+                     <a href="https://platform.paykhom.com" class="mx-md-8 ms-4 text-reset">Platform</a>
+                     <a href="https://platform.paykhom.com/signup?get-store" class="text-reset d-none d-md-block">Get Your Store</a>
                      <!-- Button -->
                   </div>
                </div>
@@ -614,87 +614,7 @@ yield html`
                   <a href="/"><img  loading="lazy" data-src="/paykhom-nobg.png" alt="Paykhom Limited" width="40px" />Paykhom Limited</a>
                   <button id="btn_close_cart" type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                </div>
-               <div class="offcanvas-body">
-                  <div>
-                     <ul class="navbar-nav align-items-start" style="text-wrap-mode: nowrap">
-                        <li class="nav-item dropdown">
-                           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Electronics</a>
-                           <ul class="dropdown-menu" style="overflow-y: scroll;max-height: 400px;">
-
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/accessories/page/1">Accessories</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/appliance/page/1">Appliance</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/camera/page/1">Camera</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/component/page/1">Component</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/desktop/page/1">Desktop</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/gadget/page/1">Gadget</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/gaming/page/1">Gaming</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/laptop/page/1">Laptop</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/monitor/page/1">Monitor</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/networking/page/1">Networking</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/office-equipment/page/1">Office Equipment</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/phone/page/1">Phone</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/security/page/1">Security</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/server-storage/page/1">Server & Storage</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/software/page/1">Software</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/tablet/page/1">Tablet</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/tv/page/1">TV</a>
-                              </li>
-                              <li class="nav-item">
-                                 <a class="nav-link" href="/shopping/category/ups/page/1">UPS</a>
-                              </li>
-
-                           </ul>
-
-
-
-                        </li>
-
-
-                        <!-- <li class="nav-item">
-                           <a class="nav-link" href="/shopping/brand/page/1">Brands</a>
-                        </li> -->
-                        <!-- <li class="nav-item">
-                           <a class="nav-link" href="/shopping/product/page/1">Products</a>
-                        </li> -->
-                        <!-- <li class="nav-item">
-                           <a class="nav-link" href="/user/shopping/order">Dashboard</a>
-                        </li> -->
-                     </ul>
-                  </div>
-               </div>
+               
             </div>
          </div>
       </nav>

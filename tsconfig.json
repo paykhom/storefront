@@ -15,7 +15,7 @@
       
     },
      "include": [       
-      "server", 
+      "container", 
       "global.ts",
       "main.ts", 
       "app"    

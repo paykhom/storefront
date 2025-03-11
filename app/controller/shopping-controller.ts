@@ -2,8 +2,8 @@
 
 import { Context } from 'hono';
 import { BaseController as Controller } from "./base-controller";
-import { PostgresqlClientService } from 'paykhom-fw/service/postgresql-client-service';
-import { SessionService, UserSession } from 'paykhom-fw/service/session-service';
+import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
+import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 // Define the cart item interface
 interface CartItem {
     product_variant_id: number;
@@ -503,7 +503,7 @@ export class ShoppingController extends Controller {
             const res = await this.pg.fx('ecom.product_variant__fetch', params);
             const ret_data = res.ret_data;
 
-            return await this.render(c, 'Shopping/ProductVariantSingle', { product: ret_data, meta: { title: "Paykhom Platform" } });
+            return await this.render(c, 'product-variant-single', { product: ret_data, meta: { title: "Paykhom Platform" } });
 
         } catch (error: any) {
             console.error("Error in viewProductVariant:", error);
@@ -622,6 +622,25 @@ export class ShoppingController extends Controller {
       return this.searchProductVariants(c, "brand"/*, brandSlug, extra*/);
     }
 
+
+    async onPostGlobalSearch(c: Context): Promise<Response> {
+      try {
+        const payload = await c.req.json();
+
+        // Arguments to pass to the stored function
+        const args = {
+            search: payload.search,
+        };
+
+        // Call the PostgreSQL stored function
+        const result = await this.pg.fx("ecom.__search_global_storefront", args);
+
+        return c.json(result);
+      } catch (error) {
+          console.error("Error executing function:", error);
+          return c.json({ error: "Internal Server Error" }, 500);
+      }
+    }
 
     // POST METHODS
     // async onPostCartAdd(c: Context): Promise<Response> {

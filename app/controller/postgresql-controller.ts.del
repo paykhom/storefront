@@ -1,8 +1,8 @@
 // FILE: postgresql-controller.ts
 
 import { BaseController as Controller } from "./base-controller";
-import { PostgresqlClientService } from "paykhom-fw/service/postgresql-client-service";
-import { SessionService, UserSession } from "paykhom-fw/service/session-service"; // Added for potential future use
+import { PostgresqlClientService } from "paykhom-fw/container/service/postgresql-client-service";
+import { SessionService, UserSession } from "paykhom-fw/container/service/session-service"; // Added for potential future use
 import { Context } from 'hono';
 
 export class PostgresqlController extends Controller {

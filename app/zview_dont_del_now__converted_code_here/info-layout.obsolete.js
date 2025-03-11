@@ -1,4 +1,4 @@
-import View from 'paykhom-fw/view';
+import View from 'paykhom-fw/app/view';
 
 export class InfoLayout extends View /* TODO: Theme*/ {
    

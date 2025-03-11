@@ -2,8 +2,8 @@
 
 import { BaseController as Controller } from "./base-controller";
 import { Context } from "hono";
-import { PostgresqlClientService } from 'paykhom-fw/service/postgresql-client-service';
-import { SessionService, UserSession } from 'paykhom-fw/service/session-service';
+import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
+import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 
 export class PlatformController extends Controller {
   private pg: PostgresqlClientService;

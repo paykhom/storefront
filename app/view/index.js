@@ -1,5 +1,4 @@
 import MarketplaceLayout from './marketplace-layout'; // Adjust path as needed
-//import { Page } from 'paykhom-fw/view';
 
 export default class  Index extends MarketplaceLayout {
     constructor(params) {

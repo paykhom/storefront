@@ -3,10 +3,10 @@
 import { Hono } from "hono";
 import { PlatformController } from "../controller/platform-controller";
 import { ShoppingController } from "../controller/shopping-controller";
-import { Glass } from "paykhom-fw/glass";
-import { ApplicationServer } from "../../server";
+import { TClass } from "paykhom-fw/tclass";
+import { ApplicationServer } from "../../container";
 
-export class WebRouterShopping extends Glass {
+export class WebRouterShopping extends TClass {
   private app: ApplicationServer;
   private platformController: PlatformController;
   private shoppingController: ShoppingController;
@@ -22,7 +22,7 @@ export class WebRouterShopping extends Glass {
     this.app.get("/shopping/category/page/:page", async (c) => await this.shoppingController.onGetCategoryPaginator(c));
     this.app.get("/shopping/category/:categorySlug/page/:pageNum", async (c) => await this.shoppingController.onGetCategorySinglePaginator(c));
     this.app.get("/shopping/product/page/:page", async (c) => await this.shoppingController.onGetProductPaginator(c));
-    this.app.get("/shopping/product/product-variant/page/:page", async (c) => await this.shoppingController.onGetProductVariantPaginator(c));
+    this.app.get("/shopping/product-variant/:variantSlug", async (c) => await this.shoppingController.viewProductVariant(c));
 
     this.app.get("/shopping/brand/page/:page", async (c) => await this.shoppingController.onGetBrandPaginator(c));
     this.app.get("/shopping/brand/:brandSlug/page/:pageNum/*", async (c) => await this.shoppingController.onGetBrandSinglePaginator(c));
@@ -46,6 +46,10 @@ export class WebRouterShopping extends Glass {
     // Route::post("/shopping/brand/{brandSlug}/{extra?}", [ShoppingController::class, "paginateProductsByBrand"])->where('extra', '.*');
     this.app.post("/shopping/brand/:brandSlug/:extra?", async (c) => await this.shoppingController.paginateProductsByBrand(c));
 
+    this.app.post("/shopping/search", async (c) => await this.shoppingController.onPostGlobalSearch(c));
+
+
+  
     
 
 //PHP
@@ -155,9 +159,17 @@ Route::get( "/db/ecom/attrib_value/search/{category_id}", function ($category_id
   
 
 
+  
+
+
 
 */
- 
+
+
+
+
+
+
  
  
  

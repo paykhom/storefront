@@ -1,5 +1,3 @@
-//`;namespace App\Views\Shopping;
-
 import MarketplaceLayout from "./marketplace-layout";
 
 export default class ProductVariantSingle extends MarketplaceLayout {
@@ -8,7 +6,7 @@ export default class ProductVariantSingle extends MarketplaceLayout {
 yield html`
 		<style>
 			/* .product {
-				background-image: url(/_media/${this.product["product_media"] ?? "no_image.jpg"});
+				background-image: url(/_media/${this.product['product_media'] ?? "no_image.jpg"});
 			} */
 
 			.table
@@ -64,26 +62,28 @@ yield html`
             text-decoration: none;
          } 		 */
 		</style>
-`;	}
+`;	
+}
 
 
 	* head() {
 		yield html`
-        <title>`this.product["title"]` - Paykhom Mondi</title>
-		<meta property="og:image:alt" content="`this.product["title"]`">
-		<meta property="og:image" content="${this.origin}/_media/${this.product["product_media"] ?? "no_image.jpg"}">
-		<meta content="`this.product["product_media"] ?? "no_image.jpg"`">
-		<meta property="og:title" content="`this.product["title"]`">
-		<meta property="og:url" content="/product/`this.product["slug"]`">
+        <title>${this.product['title']} - Paykhom Mondi</title>
+		<meta property="og:image:alt" content="${this.product['title']}">
+		<meta property="og:image" content="${this.origin}/_media/${this.product['product_media'] ?? "no_image.jpg"}">
+		<meta content="${this.product['product_media'] ?? "no_image.jpg"}">
+		<meta property="og:title" content="${this.product['title']}>
+		<meta property="og:url" content="/product/${this.product['slug']}>
 		<meta property="og:site_name" content="Paykhom Mondi">
 		<meta name="description" property="og:description">
-		<meta name="???" content="${this.product["description"]}">
+		<meta name="???" content="${this.product['description']}">
 
-        <meta name="title" content="`this.product["title"]` - Paykhom Mondi">
-         <meta name="description" content="${this.product["description"]}" >
-        <meta name="keywords" content="`this.product["title"]` | Paykhom Mondi" >
+        <meta name="title" content="${this.product['title']} - Paykhom Mondi">
+         <meta name="description" content="${this.product['description']}" >
+        <meta name="keywords" content="${this.product['title']} | Paykhom Mondi" >
 
-        `;	}
+        `;	
+		}
 
 	*	content() {
 
@@ -102,9 +102,9 @@ yield html`
 							<nav aria-label="breadcrumb">
 								<ol class="breadcrumb mb-0">
 									<li class="breadcrumb-item"><a href="/">Home</a></li>
-									<li class="breadcrumb-item"><a href="/shopping/category/`this.product["category_slug"]`/page/1">`this.product["category_title"]`</a></li>
+									<li class="breadcrumb-item"><a href="/shopping/category/${this.product['category_slug']}</page/1">${this.product['category_title']}</a></li>
 
-									<li class="breadcrumb-item active" aria-current="page">`this.product["title"]`</li>
+									<li class="breadcrumb-item active" aria-current="page">${this.product['title']}</li>
 								</ol>
 							</nav>
 						</div>
@@ -117,38 +117,27 @@ yield html`
 						<div class="col-xxl-5 col-xl-5 col-lg-5  col-md-5 col-sm-12">
 							<div xclass="zoom" xonmousemove="zoom(event)" xstyle="background-image: url(/theme/freshcart/assets/images/product-single-img-1.jpg)">
 											<!-- img -->
-											<img class="img-fluid" loading="lazy" data-src="`this.product["logo_image"]`" alt="" style="width:100%">
+											<img class="img-fluid" loading="lazy" data-src="${this.product['logo_image']}" alt="" style="width:100%">
 							</div>
 						</div>
 						<div class="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12">
 							<div class="ps-lg-10 mt-6 mt-md-0">
 								<!-- content -->
-								<!-- <a href="/category/`this.product["category_slug"]`" class="mb-4 d-block">`this.product["category_title"]`</a> -->
 								<!-- heading -->
-								<h1 id="product__title" data-product-title="`this.product["title"]`" class="mb-1">`this.product["title"]`</h1>
+								<h1 id="product__title" data-product-title="${this.product['title']} class="mb-1">${this.product['title']}</h1>
 								<div class="child-list">
-									<span id="product__list_price" data-product-list-price="`this.product["list_price"]`" style="color:red" >Regular Price: <b style="text-decoration: line-through">`this.product["list_price"]`</b>&nbsp;</span>
-									<span style="color:blue"><b>`number_format((((this.product["price"]?? 0) == 0? 0: (this.product["list_price"] / this.product["price"])) - 1) * 100 ,2)`</b>% Off&nbsp;</span>
-									<span id="product__price" data-product-price="`this.product["price"]`" style="color:green" >Price: <b>`this.product["price"]`</b>&nbsp;</span>
-									<span id="product_variant_id" data-product-variant-id="`this.product["product_variant_id"]`">Product Code: <b>`this.product["product_variant_id"]`</b>&nbsp;</span>
-									<span >Brand: <b>`this.product["brand_title"]`</b>&nbsp;</span>
-									<span >Status: <b>`this.product["availability_title"]`</b>&nbsp;</span>
+									<span id="product__list_price" data-product-list-price="${this.product['list_price']}" style="color:red" >Regular Price: <b style="text-decoration: line-through">${this.product['list_price']}</b>&nbsp;</span>
+									<span style="color:blue"><b>${((((this.product['price']?? 0) == 0? 0: (this.product['list_price'] / this.product['price'])) - 1) * 100 ,2).toFixed(2)}</b>% Off&nbsp;</span>
+									<span id="product__price" data-product-price="${this.product['price']}" style="color:green" >Price: <b>${this.product['price']}</b>&nbsp;</span>
+									<span id="product_variant_id" data-product-variant-id="${this.product['product_variant_id']}">Product Code: <b>${this.product['product_variant_id']}</b>&nbsp;</span>
+									<span >Brand: <b>${this.product['brand_title']}</b>&nbsp;</span>
+									<span >Status: <b>${this.product['availability_title']}</b>&nbsp;</span>
 
 
-									<span class="d-none" id="product__product_media_path" data-product-media-path="`this.product["logo_image"]`"></span>									
-									<span class="d-none" id="product__link_product_slug" data-product-link-product-slug="`this.product["slug"]`"></span>									
+									<span class="d-none" id="product__product_media_path" data-product-media-path="${this.product['logo_image']}"></span>									
+									<span class="d-none" id="product__link_product_slug" data-product-link-product-slug="${this.product['slug']}"></span>									
 								</div>
-								
-                                <!-- <div class="mb-4">
-									<small class="text-warning">
-										<i class="bi bi-star-fill"></i>
-										<i class="bi bi-star-fill"></i>
-										<i class="bi bi-star-fill"></i>
-										<i class="bi bi-star-fill"></i>
-										<i class="bi bi-star-half"></i>
-									</small>
- 									<a href="#" class="ms-2">(30 reviews)</a>
-								</div> -->
+
 
 
 								<div class="product-short-info">
@@ -162,15 +151,18 @@ yield html`
 										<h2>Key Features</h2>					
 										<ul>
 `;  
-  $count = 0;
-  foreach (this.product["product_variant_detail"]??[] as $item) {
-    if($count >= 5) {
+  let count = 0;
+  //foreach (this.product['product_variant_detail']??[] as $item) {
+	for(let item of this.product['product_variant_detail']??[]) {
+    if(count >= 5) {
         break; // exit loop after processing the first 5 items
-    }											<li><b>`$item["attrib_title"]`:&nbsp;</b>`$item["content"]`</li>
+    }											
+	yield html`<li><b>${item['attrib_title']}:&nbsp;</b>${item['content']}</li>
 
-`;    $count++;
+`;    
+count++;
   }											
-											<li class="view-more" data-area="specification"><a href="#view-more-info">View More Info</a></li>
+  	yield html`<li class="view-more" data-area="specification"><a href="#view-more-info">View More Info</a></li>
 										</ul>
 									</div>
                         		</div>
@@ -187,9 +179,9 @@ yield html`
 								
 								<div>
 									<!-- input -->
-									<div class="input-group input-spinner" data-product-variant-id="${this.product["product_variant_id"]}">
+									<div class="input-group input-spinner" data-product-variant-id="${this.product['product_variant_id']}">
 									<input type="button" value="-" class="button-minus btn btn-sm btn-quantity-minus" data-field="quantity">
-                              <input id="product_quantity" type="number" data-product-variant-id="${this.product["product_variant_id"]}" step="1" max="10" value="1" name="quantity" class="quantity-field form-control-sm form-input">
+                              <input id="product_quantity" type="number" data-product-variant-id="${this.product['product_variant_id']}" step="1" max="10" value="1" name="quantity" class="quantity-field form-control-sm form-input">
                               <input type="button" value="+" class="button-plus btn btn-sm btn-quantity-plus" data-field="quantity">
 									</div>
 								</div>
@@ -199,7 +191,7 @@ yield html`
                            <div class="col-xxl-4 col-lg-4 col-md-5 col-5 d-grid">
                               <!-- button -->
                               <!-- btn -->
-                              <button type="button" class="btn btn-primary  btn-add-to-cart" data-product-variant-id="${this.product["product_variant_id"]}">
+                              <button type="button" class="btn btn-primary  btn-add-to-cart" data-product-variant-id="${this.product['product_variant_id']}">
                                  <i class="feather-icon icon-shopping-bag me-2"></i>
                                  Add to cart
                               </button>
@@ -345,9 +337,9 @@ yield html`
 								<!-- tab pane -->
 								<div class="tab-pane fade show active" id="product-tab-pane" role="tabpanel" aria-labelledby="product-tab" tabindex="0">
 									<div class="my-8">
-									`this.product["product_content"]`	
+									${this.product['product_content']}	
 
-									`this.product["description"]`	
+									${this.product['description']}	
                                     </div>
 								</div>
 								<!-- tab pane -->
@@ -538,9 +530,9 @@ yield html`
 							<section class="">
 								<div class="my-8">
 									<h4 class="mb-4">Product Details</h4>
-										`this.product["product_content"]`	
+										${this.product['product_content']}	
 										
-										`this.product["description"]`	
+										${this.product['description']}	
 								</div>
 
 							</section>
@@ -565,14 +557,15 @@ yield html`
 
 
 `;  
-  foreach (this.product["product_variant_detail"]??[] as $item) {
+  //foreach (this.product['product_variant_detail']??[] as $item) {
+  for(let item of this.product['product_variant_detail']??[]) {
 yield html`
 														<tr>
-															<td>`$item["attrib_title"]`</td>
-															<td>`$item["content"]`</td>
+															<td>${item['attrib_title']}</td>
+															<td>${item['content']}</td>
 														</tr>
 `;  }
-													</tbody>
+yield html`</tbody>
 												</table>
 
 										</div>
@@ -583,9 +576,9 @@ yield html`
 							<!-- price_description section -->
 							<section class="">
 							<div class="section-head">
-        						<h2>What is the price of `this.product["title"]` in Bangladesh?</h2>
+        						<h2>What is the price of ${this.product['title']} in Bangladesh?</h2>
 							</div>
-							<p>The latest price of ${this.product["title"]` in Bangladesh is}this.product["price"]`. You can buy the `this.product["title"]` at best price from our website or visit any of our showrooms.</p>
+							<p>The latest price of ${this.product['title']} in Bangladesh is ${this.product['price']}. You can buy the ${this.product['title']} at best price from our website or visit any of our showrooms.</p>
 							</section>
 							<!-- /price_description section -->
 							 <br>
@@ -593,7 +586,7 @@ yield html`
 							<!-- reviews section -->
 							<section class="">
 							<div class="section-head">
-        						<h2>Reviews of `this.product["title"]`</h2>
+        						<h2>Reviews of ${this.product['title']}</h2>
 							</div>
 							<br>
 							<div class="row">

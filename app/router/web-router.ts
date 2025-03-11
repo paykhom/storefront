@@ -10,8 +10,8 @@ import { SaasController } from "../controller/saas-controller";
 import { RootController } from "../controller/root-controller";
 import { ShoppingController } from "../controller/shopping-controller";
 
-import { UserSession, SessionService } from "paykhom-fw/service/session-service";
-import { Glass } from "paykhom-fw/glass";
+import { UserSession, SessionService } from "paykhom-fw/container/service/session-service";
+import { TClass } from "paykhom-fw/tclass";
 
 //import { WebRouterShopping } from "./web-router-shopping";
 import { WebRouterRoot } from "./web-router-root";
@@ -20,10 +20,10 @@ import { WebRouterUser } from "./web-router-user";
 import { WebRouterSaas } from "./web-router-saas";
 import { WebRouterAdmin } from "./web-router-admin";
 import { WebRouterBundle } from "./web-router-bundler";
-import { ApplicationServer } from "../../server";
-import { PostgresqlClientService } from "paykhom-fw/service/postgresql-client-service";
+import { ApplicationServer } from "../../container";
+import { PostgresqlClientService } from "paykhom-fw/container/service/postgresql-client-service";
 
-export class WebRouter extends Glass {
+export class WebRouter extends TClass {
   private app: ApplicationServer;
   private platformController: PlatformController;
   private bundleController: BundleController;

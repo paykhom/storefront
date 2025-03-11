@@ -15,8 +15,8 @@
     "clean-css": "^5.3.3",
     "hono": "^4.7.4",
     "paykhom-fw": "../framework-paykhom-com-2025-typescript",
-    "pg": "^8.13.3",
-    "pg-pool": "^3.7.1",
+    "pg": "^8.14.0",
+    "pg-pool": "^3.8.0",
     "php-parser": "^3.2.2",
     "redis": "^4.7.0",
     "terser": "^5.39.0"

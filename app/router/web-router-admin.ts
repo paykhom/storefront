@@ -2,10 +2,10 @@
 
 import { Hono } from "hono";
 import { AdminController } from "../controller/admin-controller";
-import { Glass } from "paykhom-fw/glass";
-import { ApplicationServer } from "../../server";
+import { TClass } from "paykhom-fw/tclass";
+import { ApplicationServer } from "../../container";
 
-export class WebRouterAdmin extends Glass {
+export class WebRouterAdmin extends TClass {
   private app: ApplicationServer;
   private adminController: AdminController;
 

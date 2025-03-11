@@ -2,7 +2,7 @@
 
 import { BaseController as Controller } from "./base-controller";
 import { Context } from "hono";
-import { SessionService, UserSession } from 'paykhom-fw/service/session-service';
+import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 
 // Define the cart item interface
 interface CartItem {

@@ -4,13 +4,13 @@ import { Context, Hono } from "hono";
 import { RootController } from "../controller/root-controller";
 import { ShoppingController } from "../controller/shopping-controller";
 
-import { Glass } from "paykhom-fw/glass";
+import { TClass } from "paykhom-fw/tclass";
 
-import { PostgresqlClientService } from 'paykhom-fw/service/postgresql-client-service';
-import { SessionService, UserSession } from 'paykhom-fw/service/session-service';
-import { ApplicationServer } from "../../server";
+import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
+import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
+import { ApplicationServer } from "../../container";
 
-export class WebRouterRoot extends Glass {
+export class WebRouterRoot extends TClass {
   private app: ApplicationServer;
   private rootController: RootController;
   //private platformController: PlatformController;

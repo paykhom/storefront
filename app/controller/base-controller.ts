@@ -1,7 +1,7 @@
 // baseController.ts
-import { Controller } from "paykhom-fw/controller";
-import { PostgresqlClientService } from "paykhom-fw/service/postgresql-client-service";
-import { ContainerProvider } from 'paykhom-fw/provider/container-provider';
+import { Controller } from "paykhom-fw/app/controller";
+import { PostgresqlClientService } from "paykhom-fw/container/service/postgresql-client-service";
+import { ContainerProvider } from 'paykhom-fw/container/provider/container-provider';
 
 export class BaseController extends Controller {
   //private pgc: PostgresqlClientService;
