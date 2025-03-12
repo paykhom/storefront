@@ -51,7 +51,7 @@ export class BundleController extends Controller {
 
     // Process files
     const fileList: string[] = files.split(';');
-    const content: string = this.concatenateFiles(fileList, c);
+    const content: string = await this.concatenateFiles(fileList, c);
 
     if (c.res.status >= 400) {
       return c.res; // Return early if there was an error
@@ -73,7 +73,7 @@ export class BundleController extends Controller {
     return `${version}-${type}-${files}-${shouldMinify}`;
   }
 
-  private concatenateFiles(fileList: string[], c: Context): string {
+  private async concatenateFiles(fileList: string[], c: Context): string {
     let content: string = '';
 
     for (let i: number = 0; i < fileList.length; i++) {
@@ -92,7 +92,7 @@ export class BundleController extends Controller {
           c.text(`File not found: ${filePath}`, 404);
           return '';
         }
-        const fileContent: string = file.text() as any; // Type coercion due to Promise return
+        const fileContent: string = await file.text() as any; // Type coercion due to Promise return
         content += fileContent + '\n';
       } catch (e) {
         c.text(`Error reading file: ${filePath}`, 500);

@@ -20,9 +20,9 @@ export class AaaMiddleware extends Middleware {
     ];
     private loginURL: string;
 
-    constructor(config: Record<string, any>, deps: { sessionService: SessionService<UserSession> }) {
+    constructor(config: Record<string, any>, deps: Record<string, any>) {
         super(config);
-        this.ss = deps.sessionService;
+        this.ss = deps.sessionService as SessionService<UserSession>;
         this.protectedPrefixes = config.protectedPrefixes ?? this.protectedPrefixes;
         this.loginURL = config.loginURL ?? '/login';
     }

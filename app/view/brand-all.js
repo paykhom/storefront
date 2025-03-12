@@ -4,7 +4,6 @@ import MarketplaceLayout from "./marketplace-layout";
 
 export default class BrandAll extends MarketplaceLayout {
   
-
   *head() {
     /*
     return html`

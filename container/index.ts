@@ -34,8 +34,8 @@ export class ApplicationServer extends WebServer implements IContainer {
         config: Record<string, any>,
         dependencies: string[],
         lifetime: Lifetime = 'singleton'
-    ): T {
-        return this.container.register<T>(key, factory, config, dependencies, lifetime);
+    ): void {
+        this.container.register<T>(key, factory, config, dependencies, lifetime);
     }
 
     resolve<T>(key: string): T {
@@ -99,13 +99,13 @@ export class ApplicationServer extends WebServer implements IContainer {
         this.register<ShoppingController>("shoppingController", (config, deps) => new ShoppingController(config, deps), {}, ["pgc", "sessionService"]);
 
         // Register middlewares
-        const sessionMiddleware = this.register<SessionMiddleware>(
+        this.register<SessionMiddleware>(
             "sessionMiddleware",
             (config, deps) => new SessionMiddleware(config, deps),
             {},
             ["sessionService"]
         );
-        const aaaMiddleware = this.register<AaaMiddleware>(
+        this.register<AaaMiddleware>(
             "aaaMiddleware",
             (config, deps) => new AaaMiddleware(config, deps),
             {},
@@ -113,12 +113,24 @@ export class ApplicationServer extends WebServer implements IContainer {
         );
 
         // Register router
-        const webRouter: WebRouter = this.register<WebRouter>(
+        this.register<WebRouter>(
             "webRouter",
             (config, deps) => new WebRouter(config, deps),
             {},
             ["app", "pgc", "platformController", "bundleController", "adminController", "userController", "saasController", "rootController", "shoppingController", "sessionService"]
         );
+
+        const sessionMiddleware = this.resolve("sessionMiddleware");
+        const aaaMiddleware = this.resolve("aaaMiddleware");
+        const webRouter: WebRouter = this.resolve("webRouter");
+
+
+
+
+
+
+
+
 
         this.onError((error, c) => {
             return c.text(`Internal server error ${error}`, 500);
