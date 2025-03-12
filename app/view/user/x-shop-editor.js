@@ -254,7 +254,7 @@ yield html`
         async uponReady() {
             await super.uponReady();
 
-			await this.loadEditor(~/dbx/ecom/shop/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/shop/load_editor~, {});
 
             this.populateCombo(~[data-state="shop_type_id"]~, this.state.view_collection["ecom.shop_type"], "shop_type_id", "title", this.state.ret_data.shop_type_id);
 

@@ -612,7 +612,7 @@ yield html`
 
     //     async uponReady() {
     //         await super.uponReady();
-	// 		await this.loadEditor(~/dbx/ecom/product/load_editor~, {});
+	// 		await this.loadEditor(~/api/dbx/ecom/product/load_editor~, {});
 	// 	}
 
     // }
@@ -632,7 +632,7 @@ yield html`
             this.setHotState("ret_data"); // clarity, though, already called by MasterLayout::uponReady()....
 
 
-			await this.loadEditor(~/dbx/ecom/product/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/product/load_editor~, {});
 
             if (this.state.ret_data.product_id < 1) {
                 this.state.ret_data.product_detail = [];

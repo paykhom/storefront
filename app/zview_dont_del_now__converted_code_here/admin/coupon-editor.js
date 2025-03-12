@@ -229,7 +229,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/coupon/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/coupon/load_editor~, {});
 		}
     }
     page = new Page();

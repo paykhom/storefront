@@ -176,7 +176,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/product_review/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/product_review/load_editor~, {});
 		}
     }
     page = new Page();

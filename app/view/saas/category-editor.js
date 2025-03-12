@@ -243,7 +243,7 @@ yield html`
             this.setHotState("ret_data"); // clarity, though, already called by MasterLayout::uponReady()....
 
 
-			await this.loadEditor(~/dbx/ecom/category/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/category/load_editor~, {});
 
             if (this.state.ret_data.category_id < 1) {
                 this.state.ret_data.category_detail = [];

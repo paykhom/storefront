@@ -315,7 +315,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/buy/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/buy/load_editor~, {});
 		}
     }
     page = new Page();

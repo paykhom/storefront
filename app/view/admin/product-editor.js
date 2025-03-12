@@ -612,7 +612,7 @@ yield html`
 
     //     async uponReady() {
     //         await super.uponReady();
-	// 		await this.loadEditor(~/dbx/ecom/product/load_editor~, {});
+	// 		await this.loadEditor(~/api/dbx/ecom/product/load_editor~, {});
 	// 	}
 
     // }
@@ -632,7 +632,7 @@ yield html`
             this.setHotState("ret_data"); // clarity, though, already called by MasterLayout::uponReady()....
 
 
-			await this.loadEditor(~/dbx/ecom/product/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/product/load_editor~, {});
 
             if (this.state.ret_data.product_id < 1) {
                 this.state.ret_data.product_detail = [];
@@ -648,9 +648,9 @@ yield html`
             this.populateCombo(~[data-state="publication_status_id"]~, this.state.view_collection["cms.publication_status"], "publication_status_id", "title", this.state.ret_data.publication_status_id);
             this.populateCombo(~[data-state="category_id"]~, this.state.view_collection["ecom.category"], "category_id", "title", this.state.ret_data.category_id);
             this.populateCombo(~[data-state="department_id"]~, this.state.view_collection["ecom.department"], "department_id", "title", this.state.ret_data.department_id);
-            this.populateCombo(~[data-state="brand_id"]`, this.state.view_collection["ecom.brand"], "brand_id", "title", this.state.ret_data.brand_id);
-            this.populateCombo(`[data-state="shop_id"]`, this.state.view_collection["ecom.shop"], "shop_id", "title", this.state.ret_data.shop_id);
-            this.populateCombo(`[data-state="uom_id"]`, this.state.view_collection["ecom.uom"], "uom_id", "title", this.state.ret_data.uom_id);
+            this.populateCombo(~[data-state="brand_id"]~, this.state.view_collection["ecom.brand"], "brand_id", "title", this.state.ret_data.brand_id);
+            this.populateCombo(~[data-state="shop_id"]~, this.state.view_collection["ecom.shop"], "shop_id", "title", this.state.ret_data.shop_id);
+            this.populateCombo(~[data-state="uom_id"]~, this.state.view_collection["ecom.uom"], "uom_id", "title", this.state.ret_data.uom_id);
 		
         }
 
@@ -671,7 +671,7 @@ yield html`
             // }
 
             if (!this.validateTable(this.pa_table)) {
-                throw (`Please fill up the entire Product Attribute table rows`);                            
+                throw (~Please fill up the entire Product Attribute table rows~);                            
             }
 
 
@@ -822,7 +822,7 @@ yield html`
                     {title:"Content", field:"content", editor:"textarea", validator: "required"}
                 ],
                 validationFailed: (cell, value, validators) => {
-                    throw (`Validation failed in column "~{cell.getColumn().getDefinition().title}"`);
+                    throw (~Validation failed in column "~{cell.getColumn().getDefinition().title}"~);
                 },
                 cellEdited: function (cell) {
                     // Check if the entire row is valid after a cell is edited

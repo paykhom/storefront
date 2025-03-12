@@ -285,7 +285,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/affiliation/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/affiliation/load_editor~, {});
             this.populateCombo(~[data-state="publication_status_id"]~, this.state.view_collection["cms.publication_status"], "publication_status_id", "title", this.state.ret_data.publication_status_id);
 
 		}

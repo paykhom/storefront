@@ -109,7 +109,7 @@ this.app.get("/info/contact", async (c) => await this.rootController.onGetInfoCo
 
 
     // POST /dbx/{namespace}/{class}/{method}
-    this.app.post('/dbx/:namespace/:class/:method', async (c) => {
+    this.app.post('/api/dbx/:namespace/:class/:method', async (c) => {
       const { namespace, class: className, method } = c.req.param();
       const payload = await c.req.json();
       payload.user_module = this.getUserModuleFromReferer(c);

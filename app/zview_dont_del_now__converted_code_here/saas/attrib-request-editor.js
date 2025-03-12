@@ -224,7 +224,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/attrib/load_editor~, { publication_status_id:4 });
+			await this.loadEditor(~/api/dbx/ecom/attrib/load_editor~, { publication_status_id:4 });
 
             this.populateCombo(~[data-state="attrib_group_id"]~, this.state.view_collection["ecom.attrib_group"], "attrib_group_id", "title", this.state.ret_data.attrib_group_id);
             this.populateCombo(~[data-state="publication_status_id"]~, this.state.view_collection["cms.publication_status"], "publication_status_id", "title", this.state.ret_data.publication_status_id);

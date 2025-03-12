@@ -210,7 +210,7 @@ yield html`
 
         async uponReady() {
             await super.uponReady();
-			await this.loadEditor(~/dbx/ecom/brand/load_editor~, {});
+			await this.loadEditor(~/api/dbx/ecom/brand/load_editor~, {});
 		}
     }
     page = new Page();
