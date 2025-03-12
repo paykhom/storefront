@@ -50,10 +50,16 @@ export class ApplicationServer extends WebServer implements IContainer {
             process.exit(0);
         });
 
-        this.register<ApplicationServer>("app", () => this, {}, []);
+        this.register<ApplicationServer>(
+            "app", 
+            () => this, 
+            {
+            },
+            [
+            ]
+        );
 
         // Register services
-        this.register<PostgresqlClientService>("pgc", (config, deps) => new PostgresqlClientService(config, deps), {}, []);
         this.register<SessionService<UserSession>>("sessionService", (config, deps) => new SessionService<UserSession>(config, deps), {
             redisUrl: 'redis://localhost:6379',
             sessionPrefix: '.paykhom.com:session:',
@@ -66,6 +72,22 @@ export class ApplicationServer extends WebServer implements IContainer {
                 sameSite: 'Lax',
             },
         }, []);
+
+        this.register<PostgresqlClientService>(
+            "pgc", 
+            (config, deps) => new PostgresqlClientService(config, deps), 
+            {
+                user: 'postgres',
+                host: 'localhost',
+                database: 'paykhom',
+                password: 'adminxp123.com',
+                port: 5432,
+
+            }, 
+            [
+                "sessionService"
+            ]
+        );
 
         // Register controllers
         this.register<PlatformController>("platformController", (config, deps) => new PlatformController(config, deps), {}, ["pgc", "sessionService"]);

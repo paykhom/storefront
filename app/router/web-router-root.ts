@@ -114,7 +114,7 @@ this.app.get("/info/contact", async (c) => await this.rootController.onGetInfoCo
       const payload = await c.req.json();
       payload.user_module = this.getUserModuleFromReferer(c);
 
-      const fn = `${namespace}.${className}__${method}`;
+      const fn:string = `${namespace}.${className}__${method}`;
       let result: any;
 
       if (method === 'upsert') {
@@ -129,7 +129,7 @@ this.app.get("/info/contact", async (c) => await this.rootController.onGetInfoCo
               payload.banner_image = `banner_image${extension}`;
           }
 
-          result = await this.pgc.fx(fn, payload); // Assuming fn is a method on PostgresqlClientService
+          result = await this.pgc.fn(c, fn, payload); // Assuming fn is a method on PostgresqlClientService
 
           if (!result.is_error) {
               if (payload.logo_image && payload.logo_image_content) {
