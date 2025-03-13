@@ -1,7 +1,7 @@
 // FILE: main.ts
-import "./global"; // Loads `html` globally
+import "global"; // Loads `html` globally
 
-import { ApplicationServer } from "./container";
+import { ApplicationServer } from "container";
 
 const appServer = new ApplicationServer({}, {});
 let app = await appServer.startup()

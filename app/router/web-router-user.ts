@@ -3,7 +3,7 @@
 import { Hono } from "hono";
 import { UserController } from "../controller/user-controller";
 import { TClass } from "paykhom-fw/tclass";
-import { ApplicationServer } from "../../container";
+import { ApplicationServer } from "../../container/application-server";
 
 export class WebRouterUser extends TClass {
   private app: ApplicationServer;

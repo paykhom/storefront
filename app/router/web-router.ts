@@ -20,7 +20,7 @@ import { WebRouterUser } from "./web-router-user";
 import { WebRouterSaas } from "./web-router-saas";
 import { WebRouterAdmin } from "./web-router-admin";
 import { WebRouterBundle } from "./web-router-bundler";
-import { ApplicationServer } from "../../container";
+import { ApplicationServer } from "../../container/application-server";
 import { PostgresqlClientService } from "paykhom-fw/container/service/postgresql-client-service";
 
 export class WebRouter extends TClass {

@@ -3,7 +3,7 @@
 import { Hono } from "hono";
 import { SaasController } from "../controller/saas-controller";
 import { TClass } from "paykhom-fw/tclass";
-import { ApplicationServer } from "../../container";
+import { ApplicationServer } from "../../container/application-server";
 
 export class WebRouterSaas extends TClass {
   private app: ApplicationServer;

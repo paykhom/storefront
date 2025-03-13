@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import { PlatformController } from "../controller/platform-controller";
 import { ShoppingController } from "../controller/shopping-controller";
 import { TClass } from "paykhom-fw/tclass";
-import { ApplicationServer } from "../../container";
+import { ApplicationServer } from "../../container/application-server";
 
 export class WebRouterShopping extends TClass {
   private app: ApplicationServer;

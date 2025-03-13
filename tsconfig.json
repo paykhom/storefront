@@ -12,14 +12,14 @@
 
       "allowJs": true, // Allow importing .js files
       "checkJs": true, // Optional: Enable type-checking for .js files
-      
+      "baseUrl": "./",
     },
      "include": [       
       "container", 
       "global.ts",
-      "main.ts", 
+      "index.ts", 
       "app"    
-    ]
+, "container/application-server.ts"    ]
   }
 
 

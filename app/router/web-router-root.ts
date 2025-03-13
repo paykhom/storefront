@@ -8,7 +8,7 @@ import { TClass } from "paykhom-fw/tclass";
 
 import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
 import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
-import { ApplicationServer } from "../../container";
+import { ApplicationServer } from "../../container/application-server";
 
 export class WebRouterRoot extends TClass {
   private app: ApplicationServer;

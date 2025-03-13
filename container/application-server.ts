@@ -1,3 +1,4 @@
+/*
 import { compress } from 'hono/compress';
 import { WebRouter } from "../app/router/web-router";
 //import { ExecutionContext, Hono } from "hono";
@@ -16,43 +17,56 @@ import { UserController } from "../app/controller/user-controller";
 import { SaasController } from "../app/controller/saas-controller";
 import { RootController } from '../app/controller/root-controller';
 import { ShoppingController } from '../app/controller/shopping-controller';
-
-
 import { ExecutionContext } from 'hono';
+*/
 
-export class ApplicationServer extends WebServer implements IContainer {
-    public container: Container;
+import { compress } from 'hono/compress';
+import { WebRouter } from "app/router/web-router";
+//import { ExecutionContext, Hono } from "hono";
+import { WebServer } from "paykhom-fw/container/server/web-server";
+import { SessionMiddleware } from "paykhom-fw/container/middleware/session-middleware";
+import { AaaMiddleware } from "container/middleware/aaa-middleware";
+import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
+import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
+// import { Container, IContainer, Lifetime } from 'paykhom-fw/container';
+// import { ContainerProvider } from 'paykhom-fw/container/provider/container-provider';
+
+import BundleController from 'app/controller/bundle-controller';
+import { PlatformController } from "app/controller/platform-controller";
+import { AdminController } from "app/controller/admin-controller";
+import { UserController } from "app/controller/user-controller";
+import { SaasController } from "app/controller/saas-controller";
+import { RootController } from 'app/controller/root-controller';
+import { ShoppingController } from 'app/controller/shopping-controller';
+import { ExecutionContext } from 'hono';
+import { TClass } from 'paykhom-fw/tclass';
+
+
+export class ApplicationServer extends TClass {
+    //public container: Container;
+    public webServer : WebServer;
 
     constructor(config: {}, deps: {}) {
         super(config);
-        this.container = new Container({}, {});
+        //this.container = new Container({}, {});
+        this.webServer = new WebServer({});
     }
 
-    register<T>(
-        key: string,
-        factory: (config: Record<string, any>, deps: Record<string, any>) => T,
-        config: Record<string, any>,
-        dependencies: string[],
-        lifetime: Lifetime = 'singleton'
-    ): void {
-        this.container.register<T>(key, factory, config, dependencies, lifetime);
-    }
+    async uponReady() {
 
-    resolve<T>(key: string): T {
-        return this.container.resolve<T>(key);
-    }
+    };
 
-    async startup(): Promise<WebServer> {
-        ContainerProvider.setContainer(this.container);
+    async startup(): Promise<void> {
+        //ContainerProvider.setContainer(this.container);
 
         process.on("SIGINT", async () => {
             await this.shutdown();
             process.exit(0);
         });
 
-        this.register<ApplicationServer>(
+        this.register<WebServer>(
             "app", 
-            () => this, 
+            () => this.webServer, 
             {
             },
             [
@@ -120,8 +134,8 @@ export class ApplicationServer extends WebServer implements IContainer {
             ["app", "pgc", "platformController", "bundleController", "adminController", "userController", "saasController", "rootController", "shoppingController", "sessionService"]
         );
 
-        const sessionMiddleware = this.resolve("sessionMiddleware");
-        const aaaMiddleware = this.resolve("aaaMiddleware");
+        const sessionMiddleware: SessionMiddleware = this.resolve("sessionMiddleware");
+        const aaaMiddleware: AaaMiddleware = this.resolve("aaaMiddleware");
         const webRouter: WebRouter = this.resolve("webRouter");
 
 
@@ -132,13 +146,13 @@ export class ApplicationServer extends WebServer implements IContainer {
 
 
 
-        this.onError((error, c) => {
+        this.webServer.onError((error, c) => {
             return c.text(`Internal server error ${error}`, 500);
         });
 
         // Apply middlewares
-        this.use('*', sessionMiddleware.handle.bind(sessionMiddleware));
-        this.use('*', aaaMiddleware.handle.bind(aaaMiddleware));
+        this.webServer.use('*', sessionMiddleware.handle.bind(sessionMiddleware));
+        this.webServer.use('*', aaaMiddleware.handle.bind(aaaMiddleware));
 
         // Setup routes
         webRouter.setupRoutes();
@@ -147,14 +161,11 @@ export class ApplicationServer extends WebServer implements IContainer {
         if (typeof Bun !== 'undefined') {
             Bun.serve({
                 port: port,
-                fetch: async (request: Request, Env?: unknown, executionCtx?: ExecutionContext) => {
-                    return await this.fetch(request, Env, executionCtx);
-                },
+                fetch: async (request: Request, Env?: unknown, executionCtx?: ExecutionContext) => await this.webServer.fetch(request, Env, executionCtx),
             });
             console.log(`Application Serving on ${port}`);
         }
 
-        return this;
     }
 
     async shutdown(): Promise<void> {
