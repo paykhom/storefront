@@ -9,7 +9,7 @@ interface UserRole {
 }
 
 export class AaaMiddleware extends Middleware {
-    private ss: SessionService<UserSession>;
+    private ss!: SessionService<UserSession>;
     private protectedPrefixes: string[] = [
         'admin', 'customer', 'vendor', 'drone', 'courier',
         'carrier', 'dropshipper', 'user', 'dealer', 'distributor',
@@ -20,11 +20,15 @@ export class AaaMiddleware extends Middleware {
     ];
     private loginURL: string;
 
-    constructor(config: Record<string, any>, deps: Record<string, any>) {
+    constructor(config: Record<string, any>) {
         super(config);
-        this.ss = deps.sessionService as SessionService<UserSession>;
+        //this.ss = deps.sessionService as SessionService<UserSession>;
         this.protectedPrefixes = config.protectedPrefixes ?? this.protectedPrefixes;
         this.loginURL = config.loginURL ?? '/login';
+    }
+
+    async uponReady(): Promise<void> {
+        this.ss = this.resolve("sessionService");
     }
 
     public async handle(c: Context, next: Next) {

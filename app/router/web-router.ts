@@ -13,68 +13,74 @@ import { ShoppingController } from "../controller/shopping-controller";
 import { UserSession, SessionService } from "paykhom-fw/container/service/session-service";
 import { TClass } from "paykhom-fw/tclass";
 
-//import { WebRouterShopping } from "./web-router-shopping";
+import { WebRouterPlatform } from "./web-router-platform";
 import { WebRouterRoot } from "./web-router-root";
 import { WebRouterShopping } from "./web-router-shopping";
 import { WebRouterUser } from "./web-router-user";
 import { WebRouterSaas } from "./web-router-saas";
 import { WebRouterAdmin } from "./web-router-admin";
 import { WebRouterBundle } from "./web-router-bundler";
-import { ApplicationServer } from "../../container/application-server";
+import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 import { PostgresqlClientService } from "paykhom-fw/container/service/postgresql-client-service";
 
 export class WebRouter extends TClass {
-  private app: ApplicationServer;
-  private platformController: PlatformController;
-  private bundleController: BundleController;
-  private adminController: AdminController;
-  private userController: UserController;
-  private saasController: SaasController;
-  private rootController: RootController;
-  private shoppingController: ShoppingController;
+  private app!: WebEngine;
+  private platformController!: PlatformController;
+  private bundleController!: BundleController;
+  private adminController!: AdminController;
+  private userController!: UserController;
+  private saasController!: SaasController;
+  private rootController!: RootController;
+  private shoppingController!: ShoppingController;
   
-  private session: SessionService<UserSession>;
+  private session!: SessionService<UserSession>;
 
-  //private platformRouter: WebRouterPlatform;
-  private userRouter: WebRouterUser;
-  private saasRouter: WebRouterSaas;
-  private adminRouter: WebRouterAdmin;
-  private bundleRouter: WebRouterBundle;
-  private rootRouter: WebRouterRoot;
-  private shoppingRouter: WebRouterShopping;
+  private platformRouter!: WebRouterPlatform;
+  private userRouter!: WebRouterUser;
+  private saasRouter!: WebRouterSaas;
+  private adminRouter!: WebRouterAdmin;
+  private bundleRouter!: WebRouterBundle;
+  private rootRouter!: WebRouterRoot;
+  private shoppingRouter!: WebRouterShopping;
 
-  private pgc: PostgresqlClientService;
+  private pgc!: PostgresqlClientService;
 
   constructor(
-    config: Record<string, any>,
-    deps: Record<string, any> = {}
+    config: Record<string, any>
   ) {
     super(config);
-    this.app = deps.app as ApplicationServer;
-    this.platformController = deps.platformController as PlatformController;
-    this.bundleController = deps.bundleController as BundleController;
-    this.adminController = deps.adminController as AdminController;
-    this.userController = deps.userController as UserController;
-    this.saasController = deps.saasController as SaasController;
-    this.rootController = deps.rootController as RootController;
-    this.shoppingController = deps.shoppingController as ShoppingController;
-    
-    this.session = deps.sessionService as SessionService<UserSession>;
-    this.pgc = deps.pgc as PostgresqlClientService;
 
-    // Initialize sub-routers
-    //this.platformRouter = new WebRouterPlatform(config, { app: this.app, pgc: this.pgc, platformController: this.platformController });
-    this.userRouter = new WebRouterUser(config, { app: this.app, pgc: this.pgc, userController: this.userController });
-    this.saasRouter = new WebRouterSaas(config, { app: this.app, pgc: this.pgc, saasController: this.saasController });
-    this.adminRouter = new WebRouterAdmin(config, { app: this.app, pgc: this.pgc, adminController: this.adminController });
-    this.bundleRouter = new WebRouterBundle(config, { app: this.app, pgc: this.pgc, bundleController: this.bundleController });
-    this.rootRouter = new WebRouterRoot(config, { app: this.app, pgc: this.pgc, rootController: this.rootController });
-    this.shoppingRouter = new WebRouterShopping(config, { app: this.app, pgc: this.pgc, shoppingController: this.shoppingController, rootController: this.rootController });
   }
 
+  async uponReady(): Promise<void> {
+    this.app = this.resolve("app") as WebEngine;
+    this.platformController = this.resolve("platformController") as PlatformController;
+    this.bundleController = this.resolve("bundleController") as BundleController;
+    this.adminController = this.resolve("adminController") as AdminController;
+    this.userController = this.resolve("userController") as UserController;
+    this.saasController = this.resolve("saasController") as SaasController;
+    this.rootController = this.resolve("rootController") as RootController;
+    this.shoppingController = this.resolve("shoppingController") as ShoppingController;
+    
+    this.session = this.resolve("sessionService") as SessionService<UserSession>;
+    this.pgc = this.resolve("pgc") as PostgresqlClientService;
+
+
+    // Initialize sub-routers
+    this.platformRouter = new WebRouterPlatform({});
+    this.userRouter = new WebRouterUser({});
+    this.saasRouter = new WebRouterSaas({});
+    this.adminRouter = new WebRouterAdmin({});
+    this.bundleRouter = new WebRouterBundle({});
+    this.rootRouter = new WebRouterRoot({});
+    this.shoppingRouter = new WebRouterShopping({});
+
+  }
+
+  
   public setupRoutes() {
     // Setup routes from all sub-routers
-    //this.platformRouter.setupRoutes();
+    this.platformRouter.setupRoutes();
     this.userRouter.setupRoutes();
     this.saasRouter.setupRoutes();
     this.adminRouter.setupRoutes();

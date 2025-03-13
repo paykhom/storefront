@@ -8,22 +8,27 @@ import { TClass } from "paykhom-fw/tclass";
 
 import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
 import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
-import { ApplicationServer } from "../../container/application-server";
+import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
 export class WebRouterRoot extends TClass {
-  private app: ApplicationServer;
+  private app: WebEngine;
   private rootController: RootController;
   //private platformController: PlatformController;
 
   private pgc: PostgresqlClientService;
   private sessionService: SessionService<UserSession>;
 
-  constructor(config: Record<string, any>, deps: Record<string, any> = {}) {
+  constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as ApplicationServer;
+    this.app = deps.app as WebEngine;
     this.rootController = deps.rootController as RootController;
     this.pgc = deps.pgc as PostgresqlClientService;
     this.sessionService = deps.sessionService as SessionService<UserSession>; 
+  }
+
+  async uponReady(): Promise<void> {
+    this.pg = this.resolve("pgc");
+    this.ss = this.resolve("sessionService");
   }
 
   private getUserModuleFromReferer(c: Context): string {

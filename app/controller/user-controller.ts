@@ -20,14 +20,20 @@ interface CartItem {
 }
 
 export class UserController extends Controller {
-  private pg: PostgresqlClientService;
-  private ss: SessionService<UserSession>;
+  private pg!: PostgresqlClientService;
+  private ss!: SessionService<UserSession>;
 
-  constructor(args: Record<string, any>={}, deps: Record<string, any>={}) {
+  constructor(args: Record<string, any>={}) {
     super(args);
-    this.pg = deps.pgc as PostgresqlClientService;
-    this.ss = deps.sessionService as SessionService<UserSession>;
+    //this.pg = deps.pgc as PostgresqlClientService;
+    //this.ss = deps.sessionService as SessionService<UserSession>;
   }
+  async uponReady(): Promise<void> {
+    this.pg = this.resolve("pgc");
+    this.ss = this.resolve("sessionService");
+  }
+
+
 
   // Render method (placeholder - implement with your template engine)
   protected whyrender(c: Context, view: string, data: object) {

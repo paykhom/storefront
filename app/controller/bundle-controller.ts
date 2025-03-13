@@ -18,7 +18,7 @@ interface ProcessContentResult {
 export class BundleController extends Controller {
   private bundleCache: Map<string, CacheEntry>;
 
-  constructor(args: Record<string, any>={}, deps: Record<string, any>={}) {
+  constructor(args: Record<string, any>={}) {
     super(args);
     this.bundleCache = new Map<string, CacheEntry>();
   }

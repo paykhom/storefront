@@ -6,14 +6,20 @@ import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql
 import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 
 export class AdminController extends Controller {
-  private pg: PostgresqlClientService;
-  private ss: SessionService<UserSession>;
+  private pg!: PostgresqlClientService;
+  private ss!: SessionService<UserSession>;
 
-  constructor(args: Record<string, any>={}, deps: Record<string, any>={}) {
+  constructor(args: Record<string, any>={}) {
     super(args);
-    this.pg = deps.pgc as PostgresqlClientService;
-    this.ss = deps.sessionService as SessionService<UserSession>;
+    //this.pg = deps.pgc as PostgresqlClientService;
+    //this.ss = deps.sessionService as SessionService<UserSession>;
   }
+
+  async uponReady(): Promise<void> {
+    this.pg = this.resolve("pgc");
+    this.ss = this.resolve("sessionService");
+  }
+
 
   async onGetIndex(c: Context): Promise<Response> {
     return await this.render(c, "admin/index", { meta: { title: "Paykhom Platform" } });

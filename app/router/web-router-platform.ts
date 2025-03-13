@@ -6,21 +6,20 @@ import { ShoppingController } from "../controller/shopping-controller";
 import { TClass } from "paykhom-fw/tclass";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterShopping extends TClass {
-  private app: WebEngine;
-  private platformController: PlatformController;
-  private shoppingController: ShoppingController;
+export class WebRouterPlatform extends TClass {
+  private app!: WebEngine;
+  private platformController!: PlatformController;
+  private shoppingController!: ShoppingController;
 
-  constructor(config: Record<string, any> = {}) {
+  constructor(config: Record<string, any>) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.platformController = deps.platformController as PlatformController;
-    this.shoppingController = deps.shoppingController as ShoppingController;
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
+    this.app = this.resolve("app") as WebEngine;
+    this.platformController = this.resolve("platformController") as PlatformController;
+    this.shoppingController = this.resolve("shoppingController") as ShoppingController;
+
   }
 
   public setupRoutes() {

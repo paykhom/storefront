@@ -5,7 +5,7 @@ import { compress } from 'hono/compress'
 import { WebRouter } from "../app/router/web-router";
 
 //import { RabbitMQService } from "paykhom-fw/infrastructure/messaging/rabbitmq-service";
-import { Config } from "./config/config";
+import { Config } from "./config";
 //REN: import { RabbitMQProvider } from "./providers/rabbitmqProvider";
 //import { HttpServer } from "paykhom-fw/httpServer";
 import { SessionMiddleware } from "paykhom-fw/container/middleware/session-middleware";

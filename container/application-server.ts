@@ -37,24 +37,18 @@ import { UserController } from "app/controller/user-controller";
 import { SaasController } from "app/controller/saas-controller";
 import { RootController } from 'app/controller/root-controller';
 import { ShoppingController } from 'app/controller/shopping-controller';
-import { ExecutionContext } from 'hono';
-import { TClass } from 'paykhom-fw/tclass';
 
+import { HelloWorldPlugin } from 'paykhom-fw/core/ext/plugin/hello-world';
+
+import { appConfig } from './config';
 
 export class ApplicationServer extends WebServer {
  
-    constructor(config: {}, deps: {}) {
+    constructor(config: Record<string, any>) {
         super(config);
         //this.container = new Container({}, {});
     }
 
-    async uponStart(): Promise<void> {
-        await super.uponStart();
-    }
-
-    async uponReady(): Promise<void> {
-        await super.uponReady();
-    }
 
 
     async uponInit(): Promise<void> {
@@ -90,52 +84,49 @@ export class ApplicationServer extends WebServer {
         // Register services
 
         // Register controllers
-        this.register<PlatformController>("platformController", (config, deps) => new PlatformController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<BundleController>("bundleController", (config, deps) => new BundleController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<AdminController>("adminController", (config, deps) => new AdminController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<UserController>("userController", (config, deps) => new UserController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<SaasController>("saasController", (config, deps) => new SaasController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<RootController>("rootController", (config, deps) => new RootController(config, deps), {}, ["pgc", "sessionService"]);
-        this.register<ShoppingController>("shoppingController", (config, deps) => new ShoppingController(config, deps), {}, ["pgc", "sessionService"]);
+        this.register<PlatformController>("platformController", (config) => new PlatformController(config), {});
+        this.register<BundleController>("bundleController", (config) => new BundleController(config), {});
+        this.register<AdminController>("adminController", (config) => new AdminController(config), {});
+        this.register<UserController>("userController", (config) => new UserController(config), {});
+        this.register<SaasController>("saasController", (config) => new SaasController(config), {});
+        this.register<RootController>("rootController", (config) => new RootController(config), {});
+        this.register<ShoppingController>("shoppingController", (config) => new ShoppingController(config), {});
 
         this.register<AaaMiddleware>(
             "aaaMiddleware",
-            (config, deps) => new AaaMiddleware(config, deps),
-            {},
-            ["sessionService"]
+            (config) => new AaaMiddleware(config),
+            {}
         );
 
         // Register router
         this.register<WebRouter>(
             "webRouter",
-            (config, deps) => new WebRouter(config, deps),
+            (config) => new WebRouter(config),
             {},
             ["app", "pgc", "platformController", "bundleController", "adminController", "userController", "saasController", "rootController", "shoppingController", "sessionService"]
         );
 
-        const aaaMiddleware: AaaMiddleware = this.resolve("aaaMiddleware");
-        const webRouter: WebRouter = this.resolve("webRouter");
-
-
-
-
-
-
-
-
 
         // Apply middlewares
+        const aaaMiddleware: AaaMiddleware = this.resolve("aaaMiddleware");
         this.webEngine.use('*', aaaMiddleware.handle.bind(aaaMiddleware));
 
         // Setup routes
-        webRouter.setupRoutes();
+        (this.resolve("webRouter") as WebRouter).setupRoutes();
+        //webRouter.setupRoutes();
 
 
+    }
+
+    async uponReady(): Promise<void> {
+        await super.uponReady({}, {});
     }
 
     async uponStart(): Promise<void> {
-        super.uponStart();
+        await super.uponStart({}, {});
     }
+
+
 
     async shutdown(): Promise<void> {
         super.shutdown();

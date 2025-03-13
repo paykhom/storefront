@@ -6,8 +6,8 @@ import { ContainerProvider } from 'paykhom-fw/container/provider/container-provi
 export class BaseController extends Controller {
   //private pgc: PostgresqlClientService;
 
-  constructor(args: Record<string, any>={}, deps: Record<string, any>={}) {
-    super(args, deps);
+  constructor(args: Record<string, any>={}) {
+    super(args);
     //this.pgc = ContainerProvider.getContainer().resolve("pgc") as PostgresqlClientService;
   }
 
