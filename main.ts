@@ -14,25 +14,10 @@ class Paykhom extends Application {
 
     constructor() {
         super({});
-
     }
 
 
     async uponInit(config: Record<string, any>): Promise<void> {
-        //await super.uponInit(config);
-
-        //ContainerProvider.setContainer(this.container);
-
-
-        // Register services
-
-
-        // Register router
-        this.register<WebRouter>(
-            "webRouter",
-            (config) => new WebRouter(config),
-            {}
-        );
 
 
 
@@ -40,20 +25,20 @@ class Paykhom extends Application {
     }
 
     async uponReady(config: Record<string, any>): Promise<void> {
-        await super.uponReady({});
+        //await super.uponReady({});
 
         // Apply middlewares
         const aaaMiddleware: AaaMiddleware = this.resolve("aaaMiddleware");
         this.webEngine.use('*', aaaMiddleware.handle.bind(aaaMiddleware));
 
         // Setup routes
-        (this.resolve("webRouter") as WebRouter).setupRoutes();
-        //webRouter.setupRoutes();
+        await (this.resolve("webRouter") as WebRouter).uponReady();
 
     }
 
     async uponStart(config: Record<string, any>): Promise<void> {
-        await super.uponStart({});
+        //await super.uponStart({});
+        this.emitEvent("ping");
     }
 
 

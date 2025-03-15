@@ -18,11 +18,10 @@ export class WebRouterPlatform extends Router {
   }
 
   async uponReady(): Promise<void> {
-
-  }
-
-  public setupRoutes() {
     this.app = this.resolve("app") as WebEngine;
+
+    await this.platformController.uponReady();
+    await this.shoppingController.uponReady();
 
     this.app.get("/shopping/category/page/:page", async (c) => await this.shoppingController.onGetCategoryPaginator(c));
     this.app.get("/shopping/category/:categorySlug/page/:pageNum", async (c) => await this.shoppingController.onGetCategorySinglePaginator(c));

@@ -12,14 +12,15 @@ export class WebRouterBundle extends Router {
 
   constructor(config: Record<string, any> = {}) {
     super(config);
+    
     this.bundleController = new BundleController();
   }
 
   async uponReady(): Promise<void> {
-  }
-
-  public setupRoutes() {
     this.app = this.resolve("app") as WebEngine;
+
+    await this.bundleController.uponReady();
+
     // this.pg = this.resolve("pgc");
     // this.ss = this.resolve("sessionService");
 

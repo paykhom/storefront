@@ -51,33 +51,16 @@ export class WebRouter extends Router {
   }
 
   async uponReady(): Promise<void> {
-    // this.platformController = this.resolve("platformController") as PlatformController;
-    // this.bundleController = this.resolve("bundleController") as BundleController;
-    // this.adminController = this.resolve("adminController") as AdminController;
-    // this.userController = this.resolve("userController") as UserController;
-    // this.saasController = this.resolve("saasController") as SaasController;
-    // this.rootController = this.resolve("rootController") as RootController;
-    // this.shoppingController = this.resolve("shoppingController") as ShoppingController;
-    
-    // this.session = this.resolve("sessionService") as SessionService<UserSession>;
-    // this.pgc = this.resolve("pgc") as PostgresqlClientService;
-
-
-    // Initialize sub-routers
-  }
-
-  
-  public setupRoutes() {
     this.app = this.resolve("app") as WebEngine;
 
     // Setup routes from all sub-routers
-    this.platformRouter.setupRoutes();
-    this.userRouter.setupRoutes();
-    this.saasRouter.setupRoutes();
-    this.adminRouter.setupRoutes();
-    this.bundleRouter.setupRoutes();
-    this.rootRouter.setupRoutes();
-    this.shoppingRouter.setupRoutes();
+    await this.platformRouter.uponReady();
+    await this.userRouter.uponReady();
+    await this.saasRouter.uponReady();
+    await this.adminRouter.uponReady();
+    await this.bundleRouter.uponReady();
+    await this.rootRouter.uponReady();
+    await this.shoppingRouter.uponReady();
 
     // Catch-all for static files
     this.app.use(
@@ -85,9 +68,13 @@ export class WebRouter extends Router {
       serveStatic({
         root: "./public",
         onNotFound: (path, c) => {
-          console.log(`Static File not Found: ${path}}`)
+          this.log(`Static File not Found: ${path}}`)
         },
       })
     );
+
   }
+
+  
+
 }

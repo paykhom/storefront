@@ -15,10 +15,10 @@ export class WebRouterAdmin extends Router {
   }
 
   async uponReady(): Promise<void> {
-  }
-
-  public setupRoutes() {
     this.app = this.resolve("app") as WebEngine;
+
+    await this.adminController.uponReady();
+
 
     this.app.get('/admin', async (c) => await this.adminController.onGetIndex(c));
     this.app.get('/admin/dashboard', async (c) => await this.adminController.viewDashboardOnGet(c));

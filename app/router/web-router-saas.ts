@@ -6,22 +6,19 @@ import { Router } from "paykhom-fw/container/router";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
 export class WebRouterSaas extends Router {
-  private app: WebEngine;
+  private app!: WebEngine;
   private saasController: SaasController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
+
     this.saasController = new SaasController();
   }
 
   async uponReady(): Promise<void> {
-    // this.pg = this.resolve("pgc");
-    // this.ss = this.resolve("sessionService");
-  }
-
-  public setupRoutes() {
     this.app = this.resolve("app") as WebEngine;
-    // this.app.get('/saas', async (c) => await this.saasController.onGetIndex(c)); // Uncomment when implemented
+
+    await this.saasController.uponReady();
 
     // Paginators
     this.app.get('/saas/catalog/category-request', async (c) => await this.saasController.onGetCategoryRequestPaginator(c));

@@ -1,23 +1,39 @@
 // Export an async function to resolve the imports
 export default async () => ({
     container: {
+        routers: {
+            webRouter: {
+                class: "WebRouter",
+                module: import("app/router/web-router"),
+                config: {
+                    ctor:{}
+                },
+            },
+
+        },
         middleware: {
             sessionMiddleware: {
                 class: "SessionMiddleware",
                 module: import("paykhom-fw/container/middleware/session-middleware"),
-                config: {},
+                config: {
+                    ctor:{}
+                },
             },
             aaaMiddleware: {
                 class: "AaaMiddleware",
                 module: import("container/middleware/aaa-middleware"),
-                config: {},
+                config: {
+                    ctor:{}
+                },
             }
         },
         plugins: {
             hwp: {
-                class: "HelloWorldPlugin",
+                class: "HelloWorld",
                 module: import("paykhom-fw/container/plugin/hello-world"),
-                config: {},
+                config: {
+                    ctor:{}
+                },
             }
         },
         services: {
@@ -25,6 +41,7 @@ export default async () => ({
                 class: "SessionService",
                 module: import("paykhom-fw/container/service/session-service"),
                 config: {
+                    ctor: {},
                     redisUrl: 'redis://localhost:6379',
                     sessionPrefix: '.paykhom.com:session:',
                     defaultTTL: 3600 * 24 * 30 * 12, // 1h * 24 * 30 * 12
@@ -42,6 +59,7 @@ export default async () => ({
                 class: "PostgresqlClientService",
                 module: import("paykhom-fw/container/service/postgresql-client-service"),
                 config: { 
+                    ctor: {},
                     user: "postgres", 
                     host: "localhost", 
                     database: "paykhom", 

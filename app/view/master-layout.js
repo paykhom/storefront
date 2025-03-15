@@ -980,6 +980,8 @@ yield html`
 
                                     </ul>
                                 </li>
+                                ${this.generatePluginMenus(this.menu)}
+
                                 <li class="submenu d-none">
                                     <!-- <h6 class="submenu-hdr">Main</h6> -->
                                     <a href="javascript:void(0);">
@@ -2622,4 +2624,41 @@ yield html`
 
 `;
     }
+
+
+    
+    generatePluginMenus(menu) {
+
+        let html = '';
+
+
+        if (menu.children && menu.children.length > 0) {
+            // Render submenu
+            html += `
+                <li class="submenu xd-none">
+                    <a href="javascript:void(0);" class="subdrop">
+                        <i data-feather="${menu.icon}"></i>
+                        <span>${menu.label}</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <ul style="display: block;">
+                        ${menu.children.map(child => this.generatePluginMenus(child)).join('')}
+                    </ul>
+                </li>
+            `;
+        } else {
+            // Render regular menu item
+            html += `
+                <li>
+                    <a href="${menu.url}">
+                        <i data-feather="${menu.icon}"></i>
+                        <span>${menu.label}</span>
+                    </a>
+                </li>
+            `;
+        }
+
+        return html;
+    }    
+
 }

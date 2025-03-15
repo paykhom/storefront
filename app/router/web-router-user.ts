@@ -12,17 +12,15 @@ export class WebRouterUser extends Router {
   constructor(config: Record<string, any> = {}) {
     super(config);
     //this.app = deps.app as WebEngine;
+
     this.userController = new UserController();
   }
 
   async uponReady(): Promise<void> {
-    // this.pg = this.resolve("pgc");
-    // this.ss = this.resolve("sessionService");
-  }
-
-  public setupRoutes() {
     // Basic routes
     this.app = this.resolve("app")
+    await this.userController.uponReady();
+
     // this.app.get('/user', async (c) => await this.userController.onGetIndex(c)); // Uncomment when implemented
     this.app.get('/user/account/profile', async (c) => await this.userController.viewProfileOnGet(c));
 

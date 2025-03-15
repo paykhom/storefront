@@ -17,13 +17,12 @@ export class WebRouterShopping extends Router {
     this.shoppingController = new ShoppingController();
   }
 
-  async uponReady(): Promise<void> {
-    // this.pg = this.resolve("pgc");
-    // this.ss = this.resolve("sessionService");
-  }
 
-  public setupRoutes() {
+  async uponReady(): Promise<void> {
     this.app = this.resolve("app") as WebEngine;
+
+    await this.platformController.uponReady();
+    await this.shoppingController.uponReady();
 
     this.app.get("/shopping/category/page/:page", async (c) => await this.shoppingController.onGetCategoryPaginator(c));
     this.app.get("/shopping/category/:categorySlug/page/:pageNum", async (c) => await this.shoppingController.onGetCategorySinglePaginator(c));

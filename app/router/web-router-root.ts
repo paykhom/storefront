@@ -25,10 +25,6 @@ export class WebRouterRoot extends Router {
 
   }
 
-  async uponReady(): Promise<void> {
-    // this.pg = this.resolve("pgc");
-    // this.ss = this.resolve("sessionService");
-  }
 
   private getUserModuleFromReferer(c: Context): string {
     const referer = c.req.header('referer');
@@ -46,11 +42,13 @@ export class WebRouterRoot extends Router {
       await Bun.write(`./storage/${path}`, Buffer.from(content, 'base64')); // Assuming content is base64-encoded
   }
 
-  public setupRoutes() {
+  async uponReady(): Promise<void> {
     this.app = this.resolve("app") as WebEngine;
-
     this.pgc = this.resolve("pgc") as PostgresqlClientService;
     this.sessionService = this.resolve("sessionService") as SessionService<UserSession>; 
+
+    await this.rootController.uponReady();
+
 
     // Root route
     this.app.get("/", async (c) => await this.rootController.onGetIndex(c));
