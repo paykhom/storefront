@@ -1,5 +1,5 @@
 import MarketplaceLayout from '../marketplace-layout'; // Adjust path as needed
-//import { Page } from 'paykhom-fw/app/view';
+//import { Page } from 'paykhom-fw/container/view';
 
 export default class  Help extends MarketplaceLayout {
     constructor(params) {

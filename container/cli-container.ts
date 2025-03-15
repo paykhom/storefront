@@ -5,7 +5,7 @@ import { compress } from 'hono/compress'
 import { WebRouter } from "../app/router/web-router";
 
 //import { RabbitMQService } from "paykhom-fw/infrastructure/messaging/rabbitmq-service";
-import { Config } from "./config";
+import { Config } from "../config";
 //REN: import { RabbitMQProvider } from "./providers/rabbitmqProvider";
 //import { HttpServer } from "paykhom-fw/httpServer";
 import { SessionMiddleware } from "paykhom-fw/container/middleware/session-middleware";
@@ -15,14 +15,14 @@ import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql
    
    
 import BundleController from '../app/controller/bundle-controller';
-import { TClass } from "paykhom-fw/tclass";
+import { Component } from "paykhom-fw/component";
 
    
 
-export class CliContainer  extends TClass {
+export class CliContainer  extends Component {
      public containers: Record<string, any>;
           
-     constructor(config: Record<string, any>, deps: {}) {
+     constructor(config: Record<string, any>) {
           super(config)
           
           this.containers = {

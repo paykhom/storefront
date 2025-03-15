@@ -2,23 +2,24 @@
 
 import { Hono } from "hono";
 import { AdminController } from "../controller/admin-controller";
-import { TClass } from "paykhom-fw/tclass";
+import { Router } from "paykhom-fw/container/router";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterAdmin extends TClass {
+export class WebRouterAdmin extends Router {
   private app!: WebEngine;
   private adminController!: AdminController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
+    this.adminController = new AdminController();
   }
 
   async uponReady(): Promise<void> {
-    this.app = this.resolve("app") as WebEngine;
-    this.adminController = this.resolve("adminController") as AdminController;
   }
 
   public setupRoutes() {
+    this.app = this.resolve("app") as WebEngine;
+
     this.app.get('/admin', async (c) => await this.adminController.onGetIndex(c));
     this.app.get('/admin/dashboard', async (c) => await this.adminController.viewDashboardOnGet(c));
 

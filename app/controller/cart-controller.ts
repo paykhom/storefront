@@ -22,15 +22,14 @@ interface CartItem {
 export class CartController extends Controller {
   private ss!: SessionService<UserSession>;
 
-  constructor(args: Record<string, any> = {}) {
-    super(args);
-    //this.ss = deps.sessionService as SessionService<UserSession>;
+  constructor(config: Record<string, any> = {}) {
+    super(config);
+    
   }
 
   async uponReady(): Promise<void> {
     this.ss = this.resolve("sessionService");
   }
-
 
   async createCart(c: Context): Promise<Response> {
     await this.ss.updateSession(c, { cart: [] });

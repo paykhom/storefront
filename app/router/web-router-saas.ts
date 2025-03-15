@@ -2,25 +2,25 @@
 
 import { Hono } from "hono";
 import { SaasController } from "../controller/saas-controller";
-import { TClass } from "paykhom-fw/tclass";
+import { Router } from "paykhom-fw/container/router";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterSaas extends TClass {
+export class WebRouterSaas extends Router {
   private app: WebEngine;
   private saasController: SaasController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.saasController = deps.saasController as SaasController;
+    this.saasController = new SaasController();
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
+    // this.pg = this.resolve("pgc");
+    // this.ss = this.resolve("sessionService");
   }
 
   public setupRoutes() {
+    this.app = this.resolve("app") as WebEngine;
     // this.app.get('/saas', async (c) => await this.saasController.onGetIndex(c)); // Uncomment when implemented
 
     // Paginators

@@ -17,9 +17,9 @@
      "include": [       
       "container", 
       "global.ts",
-      "index.ts", 
+      "xmain.ts", 
       "app"    
-, "container/application-server.ts"    ]
+, "main.ts", "config.ts"    ]
   }
 
 

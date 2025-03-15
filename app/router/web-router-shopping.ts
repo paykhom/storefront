@@ -3,27 +3,28 @@
 import { Hono } from "hono";
 import { PlatformController } from "../controller/platform-controller";
 import { ShoppingController } from "../controller/shopping-controller";
-import { TClass } from "paykhom-fw/tclass";
+import { Router } from "paykhom-fw/container/router";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterShopping extends TClass {
-  private app: WebEngine;
+export class WebRouterShopping extends Router {
+  private app!: WebEngine;
   private platformController: PlatformController;
   private shoppingController: ShoppingController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.platformController = deps.platformController as PlatformController;
-    this.shoppingController = deps.shoppingController as ShoppingController;
+    this.platformController = new PlatformController();
+    this.shoppingController = new ShoppingController();
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
+    // this.pg = this.resolve("pgc");
+    // this.ss = this.resolve("sessionService");
   }
 
   public setupRoutes() {
+    this.app = this.resolve("app") as WebEngine;
+
     this.app.get("/shopping/category/page/:page", async (c) => await this.shoppingController.onGetCategoryPaginator(c));
     this.app.get("/shopping/category/:categorySlug/page/:pageNum", async (c) => await this.shoppingController.onGetCategorySinglePaginator(c));
     this.app.get("/shopping/product/page/:page", async (c) => await this.shoppingController.onGetProductPaginator(c));
@@ -128,12 +129,12 @@ Route::post("/shopping/brand/{brandSlug}/{extra?}", [ShoppingController::class, 
 Route::get( "/db/ecom/attrib_value/search/{category_id}", function ($category_id)  {
   
     // Arguments to pass to the stored function
-    $args = [
+    $config = [
               'category_id' => $category_id
     ];
   
         // Call the PostgreSQL stored function
-    $result = PgsqlDbModel::fn('ecom.attrib_value__search', $args);
+    $result = PgsqlDbModel::fn('ecom.attrib_value__search', $config);
     //dd($result);
     
     //return view("CategorySingle", ["pro" => $result->ret_data]);
@@ -147,12 +148,12 @@ Route::get( "/db/ecom/attrib_value/search/{category_id}", function ($category_id
     $payload = (request()->json()->all());
     
     // Arguments to pass to the stored function
-    $args = [
+    $config = [
               'search' => $payload['search']
     ];
   
         // Call the PostgreSQL stored function
-    $result = PgsqlDbModel::fn('ecom.__search_global_storefront', $args);
+    $result = PgsqlDbModel::fn('ecom.__search_global_storefront', $config);
     //dd($result);
     
     //return view("CategorySingle", ["pro" => $result->ret_data]);

@@ -2,26 +2,27 @@
 
 import { Hono } from "hono";
 import { UserController } from "../controller/user-controller";
-import { TClass } from "paykhom-fw/tclass";
+import { Router } from "paykhom-fw/container/router";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterUser extends TClass {
-  private app: WebEngine;
+export class WebRouterUser extends Router {
+  private app!: WebEngine;
   private userController: UserController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.userController = deps.userController as UserController;
+    //this.app = deps.app as WebEngine;
+    this.userController = new UserController();
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
+    // this.pg = this.resolve("pgc");
+    // this.ss = this.resolve("sessionService");
   }
 
   public setupRoutes() {
     // Basic routes
+    this.app = this.resolve("app")
     // this.app.get('/user', async (c) => await this.userController.onGetIndex(c)); // Uncomment when implemented
     this.app.get('/user/account/profile', async (c) => await this.userController.viewProfileOnGet(c));
 

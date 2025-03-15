@@ -9,10 +9,10 @@ export class PlatformController extends Controller {
   private pg!: PostgresqlClientService;
   private ss!: SessionService<UserSession>;
 
-  constructor(args: Record<string, any>={}) {
-    super(args);
-    //this.pg = deps.pgc as PostgresqlClientService;
-    //this.ss = deps.sessionService as SessionService<UserSession>;
+  constructor(config: Record<string, any>={}) {
+    super(config);
+    // this.pg = this.resolve("pgc") as PostgresqlClientService;
+    // this.ss = this.resolve("sessionService") as SessionService<UserSession>;
   }
   
   async uponReady(): Promise<void> {

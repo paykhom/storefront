@@ -2,25 +2,27 @@
 
 import { Hono } from "hono";
 import { BundleController } from "../controller/bundle-controller";
-import { TClass } from "paykhom-fw/tclass";
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
+import { Router } from "paykhom-fw/container/router";
 
-export class WebRouterBundle extends TClass {
+
+export class WebRouterBundle extends Router {
   private app!: WebEngine;
   private bundleController!: BundleController;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.bundleController = deps.bundleController as BundleController;
+    this.bundleController = new BundleController();
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
   }
 
   public setupRoutes() {
+    this.app = this.resolve("app") as WebEngine;
+    // this.pg = this.resolve("pgc");
+    // this.ss = this.resolve("sessionService");
+
     this.app.get("/bundle/:version", async (c) => await this.bundleController.handleBundleRequest(c));
   }
 }

@@ -6,13 +6,13 @@ import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql
 import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 
 export class SaasController extends Controller {
-  private pg: PostgresqlClientService;
-  private ss: SessionService<UserSession>;
+  private pg!: PostgresqlClientService;
+  private ss!: SessionService<UserSession>;
 
-  constructor(args: Record<string, any>={}) {
-    super(args);
-    //this.pg = deps.pgc as PostgresqlClientService;
-    //this.ss = deps.sessionService as SessionService<UserSession>;
+  constructor(config: Record<string, any>={}) {
+    super(config);
+    // this.pg = this.resolve("pgc") as PostgresqlClientService;
+    // this.ss = this.resolve("sessionService") as SessionService<UserSession>;
   }
 
   async uponReady(): Promise<void> {

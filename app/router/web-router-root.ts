@@ -4,31 +4,30 @@ import { Context, Hono } from "hono";
 import { RootController } from "../controller/root-controller";
 import { ShoppingController } from "../controller/shopping-controller";
 
-import { TClass } from "paykhom-fw/tclass";
+import { Router } from "paykhom-fw/container/router";
 
 import { PostgresqlClientService } from 'paykhom-fw/container/service/postgresql-client-service';
 import { SessionService, UserSession } from 'paykhom-fw/container/service/session-service';
 import { WebEngine } from "paykhom-fw/container/engine/web-engine";
 
-export class WebRouterRoot extends TClass {
-  private app: WebEngine;
+export class WebRouterRoot extends Router {
+  private app!: WebEngine;
   private rootController: RootController;
   //private platformController: PlatformController;
 
-  private pgc: PostgresqlClientService;
-  private sessionService: SessionService<UserSession>;
+  private pgc!: PostgresqlClientService;
+  private sessionService!: SessionService<UserSession>;
 
   constructor(config: Record<string, any> = {}) {
     super(config);
-    this.app = deps.app as WebEngine;
-    this.rootController = deps.rootController as RootController;
-    this.pgc = deps.pgc as PostgresqlClientService;
-    this.sessionService = deps.sessionService as SessionService<UserSession>; 
+    this.rootController = new RootController();
+    
+
   }
 
   async uponReady(): Promise<void> {
-    this.pg = this.resolve("pgc");
-    this.ss = this.resolve("sessionService");
+    // this.pg = this.resolve("pgc");
+    // this.ss = this.resolve("sessionService");
   }
 
   private getUserModuleFromReferer(c: Context): string {
@@ -48,6 +47,11 @@ export class WebRouterRoot extends TClass {
   }
 
   public setupRoutes() {
+    this.app = this.resolve("app") as WebEngine;
+
+    this.pgc = this.resolve("pgc") as PostgresqlClientService;
+    this.sessionService = this.resolve("sessionService") as SessionService<UserSession>; 
+
     // Root route
     this.app.get("/", async (c) => await this.rootController.onGetIndex(c));
 

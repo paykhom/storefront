@@ -1,4 +1,4 @@
-import View from "paykhom-fw/app/view";
+import View from "paykhom-fw/container/view";
 
 
 export default class MarketplaceLayout extends View /* TODO: Theme*/ {

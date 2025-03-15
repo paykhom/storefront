@@ -45,11 +45,11 @@ export class ShoppingController extends Controller {
     private pg!: PostgresqlClientService;
     private ss!: SessionService<UserSession>;
 
-    constructor(args: Record<string, any>={}) {
-        super(args);
-        //this.pg = deps.pgc as PostgresqlClientService;
-        //this.ss = deps.sessionService as SessionService<UserSession>;
-    }
+    constructor(config: Record<string, any>={}) {
+        super(config);
+        // this.pg = this.resolve("pgc") as PostgresqlClientService;
+        // this.ss = this.resolve("sessionService") as SessionService<UserSession>;
+        }
 
     async uponReady(): Promise<void> {
       this.pg = this.resolve("pgc");
@@ -634,12 +634,12 @@ export class ShoppingController extends Controller {
         const payload = await c.req.json();
 
         // Arguments to pass to the stored function
-        const args = {
+        const config = {
             search: payload.search,
         };
 
         // Call the PostgreSQL stored function
-        const result = await this.pg.fx("ecom.__search_global_storefront", args);
+        const result = await this.pg.fx("ecom.__search_global_storefront", config);
 
         return c.json(result);
       } catch (error) {
