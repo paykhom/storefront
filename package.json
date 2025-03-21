@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "clean-css": "^5.3.3",
-    "hono": "^4.7.4",
+    "hono": "^4.7.5",
     "paykhom-fw": "../framework-paykhom-com-2025-typescript",
-    "pg": "^8.14.0",
+    "pg": "^8.14.1",
     "pg-pool": "^3.8.0",
     "php-parser": "^3.2.2",
     "redis": "^4.7.0",

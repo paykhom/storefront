@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Cwd qw(abs_path);
+use File::Basename qw(dirname);
+use lib "$ENV{HOME}/perl5/lib/perl5"; # Use user's local Perl libs
+use lib dirname(abs_path($0)) . '//modules/commands'; # Add cli//modules/commands/
+
+# Load command modules
+use Update;
+use Status;
+use Restart;
+use Help;
+
+package Commander;
+
+sub new {
+    my ($class) = @_;
+    my $self = {
+        current_dir => dirname(dirname(abs_path($0))), # Parent of cli/
+        template_url => "https://storefront.my.paykhom.com/latest.tar.gz",
+    };
+    bless $self, $class;
+    return $self;
+}
+
+sub run {
+    my ($self, $command) = @_;
+    $command ||= 'help';
+
+    my %commands = (
+        'update'  => Update->new($self),
+        'status'  => Status->new($self),
+        'restart' => Restart->new($self),
+        'help'    => Help->new($self),
+    );
+
+    if (exists $commands{$command}) {
+        $commands{$command}->execute();
+    } else {
+        die "Unknown command: $command\nRun './commander help' for usage.\n";
+    }
+}
+
+package main;
+
+my $commander = Commander->new();
+$commander->run(shift @ARGV);

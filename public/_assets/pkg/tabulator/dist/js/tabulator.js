@@ -29626,4 +29626,4 @@
 	return TabulatorFull$1;
 
 }));
-//# sourceMappingURL=tabulator.js.map
+//# xsourceMappingURL=tabulator.js.map

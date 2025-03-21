@@ -19,7 +19,7 @@
       "global.ts",
       "xmain.ts", 
       "app"    
-, "main.ts", "config.ts"    ]
+, "application.ts", "application-config.ts"    ]
   }
 
 
