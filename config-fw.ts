@@ -123,6 +123,13 @@ export default {
                                 ctor:{}
                             }
                         },
+                        resellerController: {
+                            class: "ResellerController",
+                            module: import("paykhom-fw/app/site-manager/controller/reseller-controller"),
+                            config: {
+                                ctor:{}
+                            }
+                        },
                         cmsController: {
                             class: "CmsController",
                             module: import("paykhom-fw/app/site-manager/controller/cms-controller"),
