@@ -12,8 +12,9 @@ function refreshPage() {
     window.location.reload();
 }
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/pwa-worker.js').then(function(registration) {
+const FEATURE__PWA_WORKER__ENABLED = false;
+if (FEATURE__PWA_WORKER__ENABLED && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/pwa-worker.js?v=2025040601').then(function(registration) {
         // Check for updates manually after registration
         registration.onupdatefound = function() {
             const installingWorker = registration.installing;

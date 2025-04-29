@@ -1,6 +1,6 @@
 // FILE: global.ts
 //import { HttpServer } from "paykhom-fw/modules/server/http-server";
-//import { SessionData, SessionService } from "paykhom-fw/modules/services/session-service";
+//import { SessionData, RedisSession } from "paykhom-fw/modules/services/session-service";
 
 type featureFlags = Record<string, any>;
 

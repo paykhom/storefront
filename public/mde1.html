@@ -102,7 +102,7 @@
                                </div>
                                <div class="col-md-6">
                                    <label class="form-label">Shop</label>
-                                   <input type="number" class="form-control" id="shop_id_field" name="shop_id">
+                                   <input type="number" class="form-control" id="site_id_field" name="site_id">
                                </div>
                            </div>
                              <div class="mb-3">
@@ -296,7 +296,7 @@
                     <td>${product.category_id}</td>
                     <td>${product.department_id}</td>
                     <td>${product.brand_id}</td>
-                    <td>${product.shop_id}</td>
+                    <td>${product.site_id}</td>
                     <td>${product.title}</td>
                     <td>${product.slug}</td>
                     <td>${product.description}</td>
@@ -369,7 +369,7 @@
                 document.getElementById("category_id_field").value = product.category_id || '';
                 document.getElementById("department_id_field").value = product.department_id || '';
                 document.getElementById("brand_id_field").value = product.brand_id || '';
-                document.getElementById("shop_id_field").value = product.shop_id || '';
+                document.getElementById("site_id_field").value = product.site_id || '';
                 document.getElementById("title_field").value = product.title || '';
                 document.getElementById("slug_field").value = product.slug || '';
                 document.getElementById("description_field").value = product.description || '';
@@ -485,9 +485,9 @@
 
         // Sample initial data
         products = [
-           {product_id: 1, category_id: 100, department_id: 200, brand_id: 300, shop_id: 400, title: "Product 1", slug: "product-1", description: "Description 1", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", rating_stars: 4.5, rating_users: 10, price_min: 10.00, price_max: 20.00, list_price_min: 12.00, list_price_max: 22.00, uom_id: 1, content: "content 1"},
-           {product_id: 2, category_id: 101, department_id: 201, brand_id: 301, shop_id: 401, title: "Product 2", slug: "product-2", description: "Description 2", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-02T12:00:00Z", updated_at: "2024-01-03T12:00:00Z", rating_stars: 4.0, rating_users: 100, price_min: 20.00, price_max: 30.00, list_price_min: 25.00, list_price_max: 35.00, uom_id: 1, content: "content 2"},
-           {product_id: 3, category_id: 102, department_id: 202, brand_id: 302, shop_id: 402, title: "Product 3", slug: "product-3", description: "Description 3", logo_image: null, banner_image: null, is_active: false, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-03T12:00:00Z", updated_at: "2024-01-04T12:00:00Z", rating_stars: 5.0, rating_users: 5, price_min: 30.00, price_max: 40.00, list_price_min: 32.00, list_price_max: 42.00, uom_id: 1, content: "content 3"}
+           {product_id: 1, category_id: 100, department_id: 200, brand_id: 300, site_id: 400, title: "Product 1", slug: "product-1", description: "Description 1", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", rating_stars: 4.5, rating_users: 10, price_min: 10.00, price_max: 20.00, list_price_min: 12.00, list_price_max: 22.00, uom_id: 1, content: "content 1"},
+           {product_id: 2, category_id: 101, department_id: 201, brand_id: 301, site_id: 401, title: "Product 2", slug: "product-2", description: "Description 2", logo_image: null, banner_image: null, is_active: true, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-02T12:00:00Z", updated_at: "2024-01-03T12:00:00Z", rating_stars: 4.0, rating_users: 100, price_min: 20.00, price_max: 30.00, list_price_min: 25.00, list_price_max: 35.00, uom_id: 1, content: "content 2"},
+           {product_id: 3, category_id: 102, department_id: 202, brand_id: 302, site_id: 402, title: "Product 3", slug: "product-3", description: "Description 3", logo_image: null, banner_image: null, is_active: false, is_available: true, is_discontinued: false, is_limited: false, availability_id: 1, bitset: 0, created_at: "2024-01-03T12:00:00Z", updated_at: "2024-01-04T12:00:00Z", rating_stars: 5.0, rating_users: 5, price_min: 30.00, price_max: 40.00, list_price_min: 32.00, list_price_max: 42.00, uom_id: 1, content: "content 3"}
          ];
          productAttributes = [
              {product_attrib_value_id: 1, product_id: 1, attrib_id: 1, is_variant: true, notes: null, bitset: 0, created_at: "2024-01-01T12:00:00Z", updated_at: "2024-01-02T12:00:00Z", attrib_group_id__obsolete: 0, value: "value 1", uom_id: 1, is_key_feature: true},

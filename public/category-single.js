@@ -199,7 +199,7 @@ class Page extends MasterLayout {
             /*
             "department_id" : 1,
             "brand_id": 1,
-            "shop_id": 1,
+            "site_id": 1,
             
             "product_variant": {
                   "title": "4GB RAM",

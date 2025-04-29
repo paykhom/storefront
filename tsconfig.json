@@ -14,12 +14,15 @@
       "checkJs": true, // Optional: Enable type-checking for .js files
       "baseUrl": "./",
     },
+    "exclude": [
+      "paykhom-fw-ln/**", "**/node_modules/**"
+    ],
      "include": [       
       "container", 
       "global.ts",
       "xmain.ts", 
       "app"    
-, "application.ts", "application-config.ts"    ]
+, "app/index.ts", "config-app.ts", "config-fw.ts", "paykhom-fw-ln/component/middleware/aaa-middleware.ts"    ]
   }
 
 

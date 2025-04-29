@@ -37,6 +37,88 @@ class Class extends Interface {
     }
 
 
+	async $copyToClipboard(html) {
+
+		// --- Helper function for the legacy execCommand method ---
+		function _copyHtmlUsingExecCommand(htmlToCopy) {
+		  const container = document.createElement('div');
+		  container.style.position = 'fixed';
+		  container.style.left = '-9999px'; // Position off-screen
+		  container.style.opacity = '0';
+		  container.innerHTML = htmlToCopy;
+		  document.body.appendChild(container);
+	  
+		  let success = false;
+		  try {
+			const range = document.createRange();
+			range.selectNodeContents(container);
+			const selection = window.getSelection();
+			if (!selection) {
+				// Handle case where getSelection might return null (though rare in modern browsers)
+				throw new Error("window.getSelection() returned null");
+			}
+			selection.removeAllRanges();
+			selection.addRange(range);
+	  
+			// Execute the copy command
+			success = document.execCommand('copy');
+			if (!success) {
+			  console.warn('execCommand("copy") returned false.');
+			}
+		  } catch (err) {
+			console.error('Error during execCommand:', err);
+			success = false;
+		  } finally {
+			// Clean up: Remove selection and temporary element
+			if (window.getSelection) {
+			  window.getSelection().removeAllRanges();
+			}
+			document.body.removeChild(container);
+		  }
+		  return success;
+		}
+		// --- End of helper function ---
+	  
+		let modernApiFailed = false;
+	  
+		// 1. Try the Modern Clipboard API
+		if (navigator.clipboard && navigator.clipboard.write) {
+		  try {
+			const blobHtml = new Blob([html], { type: 'text/html' });
+			const blobText = new Blob([html], { type: 'text/plain' }); // Plain text fallback
+			const data = new ClipboardItem({
+			  'text/html': blobHtml,
+			  'text/plain': blobText,
+			});
+	  
+			await navigator.clipboard.write([data]);
+			console.log('HTML copied successfully using Clipboard API.');
+			alert('Copied to Clipboard. Paste manually.');
+			
+			return; // SUCCESS - Promise resolves here
+	  
+		  } catch (err) {
+			console.warn('Clipboard API write failed. Will attempt fallback.', err);
+			modernApiFailed = true; // Mark for fallback attempt
+		  }
+		} else {
+		  console.warn('Clipboard API (write) not supported. Will attempt fallback.');
+		  modernApiFailed = true; // Mark for fallback attempt
+		}
+	  
+		// 2. Attempt Fallback if Modern API was unavailable or failed
+		if (modernApiFailed) {
+		  console.log('Attempting fallback using legacy execCommand...');
+		  if (_copyHtmlUsingExecCommand(html)) {
+			console.log('HTML copied successfully using execCommand fallback.');
+			return; // SUCCESS - Promise resolves here
+		  } else {
+			console.error('execCommand fallback method also failed.');
+			// Both methods failed, reject the promise.
+			throw new Error('Could not copy HTML using any available method.');
+		  }
+		}
+	}
 
 
     addStateListener(listener) {
@@ -154,6 +236,9 @@ class Class extends Interface {
 							throw new Error(violationMessage);
 					}
 					throw violationMessage; // Fallback
+			}
+			else {
+				return condition
 			}
 		}    
 	
@@ -2374,6 +2459,7 @@ class Component extends Class {
 
 	}
 
+
     render(generator) {
 		//debugger;
         let html = "";
@@ -3031,6 +3117,51 @@ class AppPage extends Component {
 		await super.uponReady();
 
 	}
+
+	slugifyUrlRoute(inputText) {
+		// 1. Trim leading/trailing spaces.
+		let trimmedText = inputText.trim();
+	  
+		// 2. Handle the initial '[/]' or '/'.
+		let processedText = trimmedText;
+		if (trimmedText.startsWith('[/]')) {
+		  processedText = '/' + trimmedText.substring(3);
+		}
+	  
+		// 3. Convert to lowercase.
+		const lowerCaseText = processedText.toLowerCase();
+	  
+		// 4. Replace spaces with hyphens.
+		let slug = lowerCaseText.replace(/\s+/g, '-');
+	  
+		// 5. Remove any hyphens immediately before or after a forward slash.
+		slug = slug.replace(/-?\/-?/g, '/');
+	  
+		return slug;
+	  }
+
+	getLastParamFromUrl() {
+		const currentUrl = window.location.href;
+		const pathSegments = currentUrl.split('/');
+		const lastSegment = pathSegments.pop(); // Get the last element of the array
+	  
+		return lastSegment;
+	}
+
+    getPrimaryKeyWithIdSuffix() {
+        const primaryInput = document.querySelector('input[type="hidden"][data-primary]');
+        if (primaryInput) {
+          const dataStateValue = primaryInput.getAttribute('data-state');
+          if (dataStateValue && dataStateValue.endsWith("_id")) {
+            return dataStateValue;
+          } else {
+            console.warn("Found a primary input, but its data-state does not end with '_id'.");
+            return null;
+          }
+        } else {
+          return null;
+        }
+    }  	
 
 }
 

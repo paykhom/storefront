@@ -13,7 +13,7 @@
             "cwd": "${workspaceFolder}",
             "runtimeExecutable": "bun",
             //"runtimeArgs": ["--inspect", "src/main.ts"],
-            "runtimeArgs": ["--inspect=hs.lan:6499/debug", "src/main.ts"],
+            "runtimeArgs": ["--inspect=rd.paykhom.com:6499/debug", "src/main.ts"],
             //"program": "src/main.ts",
             // If the debugger should stop on the first line of the program.
             "stopOnEntry": true,
@@ -27,7 +27,7 @@
       
             // The URL of the WebSocket inspector to attach to.
             // This value can be retrieved by using `bun --inspect`.
-            "url": "ws://hs.lan:6499/debug",
+            "url": "ws://rd.paykhom.com:6499/debug",
           },                  
 
         {

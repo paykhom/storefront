@@ -81,11 +81,11 @@ class ApplicationServiceWorker {
           const fetchPromise = this.fetchAndCache(request);
   
           if (cachedResponse) {
-            console.log(`Cache HIT for ${request.url}`);
+            //console.log(`Cache HIT for ${request.url}`);
             event.waitUntil(fetchPromise);
             return cachedResponse;
           } else {
-            console.log(`Cache MISS for ${request.url}`);
+            //console.log(`Cache MISS for ${request.url}`);
             return fetchPromise;
           }
         }).catch(error => {
@@ -101,7 +101,7 @@ class ApplicationServiceWorker {
   
       const cachedResponse = await cache.match(request);
       if (!cachedResponse) {
-       console.log(`Cache MISS for ${request.url}`);
+       //console.log(`Cache MISS for ${request.url}`);
         return null;
       }
   
@@ -122,7 +122,7 @@ class ApplicationServiceWorker {
         return null;
       }
   
-     console.log(`Cache HIT for ${request.url}`);
+     //console.log(`Cache HIT for ${request.url}`);
       return cachedResponse;
     }
   
