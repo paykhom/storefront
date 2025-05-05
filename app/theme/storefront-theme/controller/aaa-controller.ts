@@ -1,7 +1,7 @@
 // FILE: root-controller.ts
 
 import { Context } from 'hono';
-import { AaaBaseController } from 'paykhom-fw/app/site-manager/controller/aaa-base-controller';
+import { AaaBaseController } from 'paykhom-fw/component/plugin/site-manager/controller/aaa-base-controller';
 // import { PostgresqlClientService } from '../component/service/postgresql-client-service';
 // import { RedisSession, UserSession } from '../component/session/redis-session';
 

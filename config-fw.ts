@@ -95,7 +95,7 @@ export default {
         plugins: {
             siteManager :{   
                 class: "SiteManager",
-                module: import("paykhom-fw/app/site-manager"),
+                module: import("paykhom-fw/component/plugin/site-manager"),
                 config: {
                     ctor:{}
                 },
@@ -104,42 +104,42 @@ export default {
                     controllers: {
                         apiController: {
                             class: "ApiController",
-                            module: import("paykhom-fw/app/site-manager/controller/api-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/api-controller"),
                             config: {
                                 ctor:{}
                             }
                         },
                         adminController: {
                             class: "AdminController",
-                            module: import("paykhom-fw/app/site-manager/controller/admin-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/admin-controller"),
                             config: {
                                 ctor:{}
                             }
                         },
                         userController: {
                             class: "UserController",
-                            module: import("paykhom-fw/app/site-manager/controller/user-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/user-controller"),
                             config: {
                                 ctor:{}
                             }
                         },
                         resellerController: {
                             class: "ResellerController",
-                            module: import("paykhom-fw/app/site-manager/controller/reseller-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/reseller-controller"),
                             config: {
                                 ctor:{}
                             }
                         },
                         cmsController: {
                             class: "CmsController",
-                            module: import("paykhom-fw/app/site-manager/controller/cms-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/cms-controller"),
                             config: {
                                 ctor:{}
                             }
                         },
                         ecommerceController: {
                             class: "EcommerceController",
-                            module: import("paykhom-fw/app/site-manager/controller/ecommerce-controller"),
+                            module: import("paykhom-fw/component/plugin/site-manager/controller/ecommerce-controller"),
                             config: {
                                 ctor:{}
                             }

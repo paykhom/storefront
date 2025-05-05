@@ -3178,6 +3178,308 @@ class xAppComponent extends AppPage {
 }
 
 
+// This file defines the WebSocket client service class for the frontend.
+
+/**
+ * @typedef {object} ServerMessage
+ * @property {'subscribed'|'unsubscribed'|'error'|string} type - The type of message (e.g., 'categories:changed').
+ * @property {string} [topic] - The topic the message relates to.
+ * @property {any} [payload] - Optional data payload associated with the event.
+ * @property {string} [message] - Optional message string (e.g., for errors or confirmations).
+ */
+
+/**
+ * @typedef {object} ClientMessage
+ * @property {'subscribe'|'unsubscribe'} type - The type of request being sent to the server.
+ * @property {string} topic - The topic the client is interested in.
+ */
+
+/**
+ * @callback MessageCallback
+ * @param {any} payload - The payload data from the server message.
+ * @param {string} topic - The topic the message was published on.
+ */
+
+/**
+ * A Pure Vanilla JavaScript ES6 class to manage the WebSocket connection and local Pub/Sub.
+ * This service is intended to be a singleton instance in the browser tab.
+ */
+class WebSocketClientService {
+	/**
+	 * @param {string} websocketUrl - The full URL of the WebSocket endpoint (e.g., 'ws://localhost:3000/ws').
+	 */
+	constructor(websocketUrl) {
+	  this.url = websocketUrl;
+	  /** @type {WebSocket|null} */
+	  this.socket = null;
+	  this.isConnected = false;
+	  this.reconnectInterval = 5000; // milliseconds
+	  this.reconnectAttempts = 0;
+	  this.maxReconnectAttempts = 10; // Prevent infinite reconnect loops
+  
+	  // Map topics (string) to a Set of MessageCallback functions
+	  /** @type {Map<string, Set<MessageCallback>>} */
+	  this.localSubscriptions = new Map();
+	  // Set of topics we've *tried* to subscribe to on the server
+	  /** @type {Set<string>} */
+	  this.pendingSubscriptions = new Set();
+  
+	  // Bind event handlers to the class instance early
+	  this.onOpen = this.onOpen.bind(this);
+	  this.onMessage = this.onMessage.bind(this);
+	  this.onError = this.onError.bind(this);
+	  this.onClose = this.onClose.bind(this);
+	}
+  
+	/**
+	 * Initiates the WebSocket connection. Call this once during application bootstrap.
+	 */
+	connect() {
+	  if (this.socket && (this.socket.readyState === WebSocket.CONNECTING || this.socket.readyState === WebSocket.OPEN)) {
+		console.log('[WS Client] Connection already in progress or open.');
+		return;
+	  }
+  
+	  console.log('[WS Client] Attempting to connect to', this.url);
+	  try {
+		  this.socket = new WebSocket(this.url);
+		  this.socket.addEventListener('open', this.onOpen);
+		  this.socket.addEventListener('message', this.onMessage);
+		  this.socket.addEventListener('error', this.onError);
+		  this.socket.addEventListener('close', this.onClose);
+	  } catch (error) {
+		  console.error('[WS Client] Failed to create WebSocket:', error);
+		  // Schedule a reconnect if creation fails immediately
+		   if (this.reconnectAttempts < this.maxReconnectAttempts) {
+			   this.reconnectAttempts++;
+			   console.log(`[WS Client] Scheduling reconnect ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${this.reconnectInterval / 1000}s...`);
+			   setTimeout(() => this.connect(), this.reconnectInterval);
+		   } else {
+			   console.error('[WS Client] Max reconnect attempts reached during initial creation.');
+		   }
+	  }
+	}
+  
+	/**
+	 * Handles the WebSocket 'open' event.
+	 * @private
+	 */
+	onOpen() {
+	  console.log('[WS Client] Connection opened successfully.');
+	  this.isConnected = true;
+	  this.reconnectAttempts = 0; // Reset attempts on successful connection
+  
+	  // Resend subscribe messages for any topics we intended to subscribe to
+	  console.log(`[WS Client] Resubscribing to ${this.pendingSubscriptions.size} pending topics.`);
+	  this.pendingSubscriptions.forEach(topic => this.sendSubscribe(topic));
+	}
+  
+	/**
+	 * Handles messages received from the server.
+	 * @param {MessageEvent} event
+	 * @private
+	 */
+	onMessage(event) {
+	  // Bun backend sends messages as JSON strings.
+	  const messageString = event.data;
+	  try {
+		/** @type {ServerMessage} */
+		const message = JSON.parse(messageString);
+		console.log('[WS Client] Message received:', message);
+  
+		// Handle server-side confirmation or error messages
+		if (message.type === 'subscribed') {
+		  console.log(`[WS Client] Server confirmed subscription to: ${message.topic}`);
+		  // At this point, we know the server acknowledges our interest.
+		  // The topic was already added to pendingSubscriptions when sendSubscribe was called.
+		} else if (message.type === 'unsubscribed') {
+		   console.log(`[WS Client] Server confirmed unsubscription from: ${message.topic}`);
+			// If the server confirms unsubscribe, we can potentially remove from pendingSubscriptions
+			// However, keeping it in pending ensures resubscription if connection drops and comes back *before* server processed unsubscribe
+			// Decision: Keep in pending until disconnect or explicit client unsubscribe call resolves fully.
+		} else if (message.type === 'error') {
+		   console.error('[WS Client] Server reported error:', message.message, 'Topic:', message.topic);
+		   // Potentially trigger a UI notification about the server error
+		} else {
+		  // Assume this is a custom Pub/Sub message intended for local callbacks
+		  this.distributeMessageToCallbacks(message);
+		}
+  
+	  } catch (error) {
+		console.error('[WS Client] Failed to parse incoming message:', messageString, error);
+		// Optionally send an error acknowledgment back to the server, though not strictly necessary
+	  }
+	}
+  
+	/**
+	 * Distributes a received message to all registered local callbacks for the topic.
+	 * @param {ServerMessage} message - The parsed message object.
+	 * @private
+	 */
+	distributeMessageToCallbacks(message) {
+		if (!message.topic) {
+			console.warn('[WS Client] Received message without a topic, ignoring.', message);
+			return;
+		}
+		const callbacks = this.localSubscriptions.get(message.topic);
+		if (callbacks) {
+			console.log(`[WS Client] Distributing message for topic "${message.topic}" to ${callbacks.size} local callbacks.`);
+			// Iterate over a copy in case a callback modifies the set (e.g., unsubscribes itself)
+			Array.from(callbacks).forEach(callback => {
+				try {
+					callback(message.payload, message.topic); // Call the component's handler
+				} catch (callbackError) {
+					console.error(`[WS Client] Error in local callback for topic ${message.topic}:`, callbackError);
+					// Log callback errors but don't stop processing other callbacks
+				}
+			});
+		} else {
+			console.log(`[WS Client] Received message for topic "${message.topic}", but no local subscribers.`);
+		}
+	}
+  
+  
+	/**
+	 * Handles the WebSocket 'error' event.
+	 * @param {Event} event
+	 * @private
+	 */
+	onError(event) {
+	  console.error('[WS Client] WebSocket Error:', event);
+	  this.isConnected = false;
+	  // The 'close' event usually follows 'error', so reconnect logic is primarily in onClose.
+	}
+  
+	/**
+	 * Handles the WebSocket 'close' event.
+	 * @param {CloseEvent} event
+	 * @private
+	 */
+	onClose(event) {
+	  console.log('[WS Client] Connection closed:', event.code, event.reason);
+	  this.isConnected = false;
+	  this.socket = null; // Clear the reference
+  
+	  // Attempt to reconnect unless explicitly closing (code 1000) or max attempts reached
+	  // Code 1000 is 'Normal Closure'
+	  if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
+		this.reconnectAttempts++;
+		console.log(`[WS Client] Attempting reconnect ${this.reconnectAttempts}/${this.maxReconnectAttempts} in ${this.reconnectInterval / 1000}s...`);
+		// Use setTimeout to allow time before retrying
+		setTimeout(() => this.connect(), this.reconnectInterval);
+	  } else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+		   console.error('[WS Client] Max reconnect attempts reached. Automatic reconnection stopped.');
+		   // Consider emitting a custom event or updating a status property that the UI can observe
+	  }
+	}
+  
+	/**
+	 * Sends a message to the server over the WebSocket connection.
+	 * @param {ClientMessage} message - The message object to send.
+	 * @private
+	 */
+	sendMessage(message) {
+	  if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+		const messageString = JSON.stringify(message);
+		this.socket.send(messageString);
+		console.log('[WS Client] Sent message:', message);
+	  } else {
+		console.warn('[WS Client] WebSocket not open, cannot send message:', message);
+		// If a message (especially subscribe/unsubscribe) fails to send,
+		// the reconnect logic + pendingSubscriptions handles retrying subscribes later.
+		// For other message types, you might need a queue or error handling.
+	  }
+	}
+  
+	 /**
+	  * Sends a 'subscribe' message to the server and tracks the pending subscription.
+	  * @param {string} topic - The topic to subscribe to on the server.
+	  * @private
+	  */
+	 sendSubscribe(topic) {
+		 this.pendingSubscriptions.add(topic); // Mark as pending immediately
+		 this.sendMessage({ type: 'subscribe', topic: topic });
+	 }
+  
+	 /**
+	  * Sends an 'unsubscribe' message to the server and removes from pending.
+	  * @param {string} topic - The topic to unsubscribe from on the server.
+	  * @private
+	  */
+	  sendUnsubscribe(topic) {
+		  this.pendingSubscriptions.delete(topic); // Remove from pending once client unsubscribes
+		  this.sendMessage({ type: 'unsubscribe', topic: topic });
+	  }
+  
+  
+	/**
+	 * Public method for frontend components to subscribe to a topic.
+	 * Registers a local callback and requests server subscription if needed.
+	 * @param {string} topic - The topic name.
+	 * @param {MessageCallback} callback - The function to execute when a message for this topic is received.
+	 */
+	subscribe(topic, callback) {
+	  if (!this.localSubscriptions.has(topic)) {
+		this.localSubscriptions.set(topic, new Set());
+		 // If this is the first local subscriber for this topic in this tab,
+		 // tell the backend we need messages for this topic.
+		this.sendSubscribe(topic);
+	  }
+	   // Add the callback to the set for this topic
+	  this.localSubscriptions.get(topic).add(callback);
+	  console.log(`[WS Client] Local callback subscribed to topic: ${topic}. Total local callbacks for topic: ${this.localSubscriptions.get(topic).size}`);
+	}
+  
+	/**
+	 * Public method for frontend components to unsubscribe from a topic.
+	 * Removes a local callback and requests server unsubscription if no local subscribers remain.
+	 * @param {string} topic - The topic name.
+	 * @param {MessageCallback} callback - The callback function to remove.
+	 */
+	unsubscribe(topic, callback) {
+	  const callbacks = this.localSubscriptions.get(topic);
+	  if (callbacks) {
+		callbacks.delete(callback);
+		console.log(`[WS Client] Local callback unsubscribed from topic: ${topic}. Remaining local callbacks for topic: ${callbacks.size}`);
+		if (callbacks.size === 0) {
+		  // If no local subscribers remain for this topic, tell the backend
+		  this.localSubscriptions.delete(topic);
+		  this.sendUnsubscribe(topic);
+		}
+	  }
+	}
+  
+	/**
+	 * Closes the WebSocket connection explicitly.
+	 */
+	disconnect() {
+		if (this.socket) {
+			console.log('[WS Client] Disconnecting WebSocket explicitly...');
+			 // Code 1000 indicates a normal closure
+			this.socket.close(1000, 'Client disconnecting');
+			this.isConnected = false;
+			this.socket = null;
+			 // Clear pending subscriptions as we don't intend to resubscribe after explicit disconnect
+			this.pendingSubscriptions.clear();
+		}
+	}
+  
+	 /**
+	  * Gets the current connection status.
+	  * @returns {'connecting' | 'open' | 'closing' | 'closed' | 'uninitialized'}
+	  */
+	 get status() {
+		  if (!this.socket) return 'uninitialized';
+		  switch (this.socket.readyState) {
+			  case WebSocket.CONNECTING: return 'connecting';
+			  case WebSocket.OPEN: return 'open';
+			  case WebSocket.CLOSING: return 'closing';
+			  case WebSocket.CLOSED: return 'closed';
+			  default: return 'uninitialized'; // Should not happen
+		  }
+	 }
+  }
+
 ///////////////////////////////////////////////////////
 // Custom Data Table
 ///////////////////////////////////////////////////////
@@ -8951,7 +9253,30 @@ class Sdd extends Class {
 
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
+/* BUGGY
+// This script should be loaded early in your HTML.
+
+// Create the namespace if it doesn't exist
+window.AppNamespace = window.AppNamespace || {};
+
+// Define the WebSocket URL - make sure this is correct for your setup
+const websocketUrl = `wss://${window.location.host}/ws`; // Example: Use current host
+
+// Create a single instance of the WebSocketClientService
+const appWebSocketClientServiceInstance = new WebSocketClientService(websocketUrl);
+
+// Expose the instance on the global namespace
+window.AppNamespace.webSocketService = appWebSocketClientServiceInstance;
+
+console.log("WebSocketClientService instance created and exposed on window.AppNamespace.webSocketService");
+
+// Initiate the connection when this script runs
+appWebSocketClientServiceInstance.connect();
+
+// Add other global utility instances or setup here if needed
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
