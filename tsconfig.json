@@ -13,9 +13,10 @@
       "allowJs": true, // Allow importing .js files
       "checkJs": true, // Optional: Enable type-checking for .js files
       "baseUrl": "./",
+      "outDir": "./dist"
     },
     "exclude": [
-      "paykhom-fw-ln/**", "**/node_modules/**"
+      "app/theme/**/*.js", "paykhom-fw-ln/**", "**/node_modules/**"
     ],
      "include": [       
       "container", 
