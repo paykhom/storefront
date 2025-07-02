@@ -171,7 +171,7 @@ class Class extends Interface {
 	}
 
 
-	stateScatterHandler(propertyPath, propertyValue) {
+	stateScatterHandler__OBSOLETE(propertyPath, propertyValue) {
 		//debugger;
 
 		const elements = document.querySelectorAll(`${this.id} [data-state="${propertyPath}"]`);
@@ -185,7 +185,49 @@ class Class extends Interface {
 		});
 	}
 
-	async stateGatherHandlerAsync(event) {
+	stateScatterHandler(propertyPath, propertyValue) {
+		//debugger;
+
+		// Find all elements linked to this state property
+		const elements = document.querySelectorAll(`${this.id} [data-state="${propertyPath}"]`);
+
+		elements.forEach(element => {
+			const tagName = element.tagName.toLowerCase();
+
+			// Check the element type to determine how to set the value
+			if (tagName === 'input') {
+				// Special handling for input types
+				if (element.type === 'checkbox') {
+					// For checkboxes, set the 'checked' property using the boolean state value
+					element.checked = !!propertyValue; // Use !! to ensure it's a boolean
+				}
+				// Optional: Special handling for radio buttons
+				// If propertyValue is the *value* of the selected radio in the group
+                // else if (element.type === 'radio') {
+                //     // Set checked to true only for the radio button whose value matches the state value
+                //     element.checked = (element.value === propertyValue);
+                // }
+				else {
+					// For other input types (text, number, password, etc.), set the 'value' property
+					element.value = propertyValue;
+				}
+			} else if (tagName === 'textarea' || tagName === 'select') {
+				// For textareas and selects, set the 'value' property
+				element.value = propertyValue;
+			}
+            // The original code included button using value. Let's keep this pattern
+            // although textContent is often used for button labels showing state.
+            else if (tagName === 'button') {
+                 element.value = propertyValue;
+            }
+			else {
+				// For other elements (like div, span, p), set textContent
+				element.textContent = propertyValue;
+			}
+		});
+	}
+
+	async stateGatherHandlerAsync__OBSOLETE(event) {
 		//debugger;
 
 		const element = event.target;
@@ -208,6 +250,63 @@ class Class extends Interface {
 	}
 
 
+	async stateGatherHandlerAsync(event) {
+		//debugger;
+
+		const element = event.target;
+		const propertyPath = element.dataset.state;
+
+		let propertyValue = null;
+
+		// Check element type to get the correct value/state
+		if (element.tagName.toLowerCase() === 'input') {
+			// Special handling for checkboxes
+			if (element.type === 'checkbox') {
+				propertyValue = element.checked; // Use the 'checked' boolean property
+			}
+			// Optional: Special handling for radio buttons (often store the value of the *checked* one)
+			// else if (element.type === 'radio') {
+			//    if (element.checked) {
+			//        propertyValue = element.value; // Store the value of the selected radio
+			//    } else {
+			//        // If this radio is unchecked, you might need logic here depending on how
+			//        // you represent radio groups in your state. If propertyPath is the group name,
+			//        // you'd typically find the *currently checked* radio in the group and use its value.
+			//        // For a simple handler per element, you might just skip updating if it's an unchecked radio.
+			//        // Or perhaps set propertyValue to undefined/null? Depends on your state structure.
+			//        // Let's stick to the simplest fix for now, focusing on checkbox.
+			//    }
+			// }
+            // Default for other input types (text, number, password, etc.)
+			else {
+				propertyValue = element.value; // Use the 'value' property
+			}
+		}
+		// Handle other form elements
+		else if (["textarea", "select"].includes(element.tagName.toLowerCase())) {
+			propertyValue = element.value; // Use the 'value' property
+		}
+        // Handle buttons (original code included button value, which is less common)
+        // You might want textContent for the label, or perhaps button clicks trigger a different action.
+        // Sticking to original pattern using value for now, though likely less useful.
+        else if (element.tagName.toLowerCase() === 'button') {
+             propertyValue = element.value;
+        }
+		// For other elements (like div, span, p) you might want textContent
+		else {
+			propertyValue = element.textContent;
+		}
+
+
+		// Update state - Note: This direct assignment assumes propertyPath is a top-level key
+        // on this.state[this.hotState]. If propertyPath can be nested (e.g., "user.address.city"),
+        // you'll need a helper function to safely set the nested property.
+        // The commented-out line `this.setState(propertyPath, propertyValue, this.hotState);`
+        // suggests you might already have such a helper. If so, use that instead!
+		this.state[this.hotState][propertyPath] = propertyValue;
+
+		this.notifyStateListeners(propertyPath, this.state[this.hotState][propertyPath]);
+	}
 
 
 

@@ -4,7 +4,7 @@
     border: 1px solid #FFF;
     overflow: hidden;
     position: relative;
-    xmargin: 10px; / Optional: Add some margin between cards /
+    xmargin: 10px; /* Optional: Add some margin between cards */
 }
 
 .product-img-card img {

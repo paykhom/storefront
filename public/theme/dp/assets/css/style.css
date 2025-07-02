@@ -25255,12 +25255,21 @@ table tbody td.action-table-data a.cancel-circle:hover svg {
   border-radius: 5px;
 }
 
+/* EKN
 .add-product input {
   height: 40px;
 }
+*/
 
+/* EKN */
 .input-block.add-product.list {
   position: relative;
+}
+/* /EKN */
+
+.form-check-input[type=checkbox] {
+  border: 1px solid #FF9F43; 
+  margin-top: .12em  
 }
 
 .btn-primaryadd {
